@@ -1,0 +1,72 @@
+package com.hotel.auth.service;
+
+import com.hotel.auth.dto.ChangePasswordRequest;
+import com.hotel.auth.dto.UpdateUserRequest;
+import com.hotel.auth.dto.UserResponse;
+import com.hotel.auth.entity.Role;
+import com.hotel.auth.entity.User;
+import com.hotel.auth.exception.ResourceNotFoundException;
+import com.hotel.auth.repository.RoleRepository;
+import com.hotel.auth.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserService {
+
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    public Page<UserResponse> search(String roleName, Pageable pageable) {
+        Page<User> page = roleName != null
+                ? userRepository.findByRole_RoleName(roleName, pageable)
+                : userRepository.findAll(pageable);
+        return page.map(UserResponse::new);
+    }
+
+    public UserResponse getById(Long id) {
+        return new UserResponse(findEntity(id));
+    }
+
+    public UserResponse update(Long id, UpdateUserRequest request) {
+        User user = findEntity(id);
+        if (request.getFullName() != null) {
+            user.setFullName(request.getFullName());
+        }
+        if (request.getRoleName() != null) {
+            Role role = roleRepository.findByRoleName(request.getRoleName())
+                    .orElseThrow(() -> new ResourceNotFoundException("Role not found: " + request.getRoleName()));
+            user.setRole(role);
+        }
+        return new UserResponse(userRepository.save(user));
+    }
+
+    public void changePassword(Long id, ChangePasswordRequest request) {
+        User user = findEntity(id);
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPasswordHash())) {
+            throw new BadCredentialsException("Old password is incorrect");
+        }
+        user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+    }
+
+    public void delete(Long id) {
+        User user = findEntity(id);
+        userRepository.delete(user);
+    }
+
+    User findEntity(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+    }
+}

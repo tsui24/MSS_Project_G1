@@ -1,0 +1,89 @@
+package com.hotel.auth.service;
+
+import com.hotel.auth.dto.LoginRequest;
+import com.hotel.auth.dto.LoginResponse;
+import com.hotel.auth.dto.RegisterRequest;
+import com.hotel.auth.entity.Role;
+import com.hotel.auth.entity.User;
+import com.hotel.auth.exception.DuplicateResourceException;
+import com.hotel.auth.exception.ResourceNotFoundException;
+import com.hotel.auth.repository.RoleRepository;
+import com.hotel.auth.repository.UserRepository;
+import com.hotel.common.security.JwtUtil;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class AuthService {
+
+    private static final String DEFAULT_ROLE = "CUSTOMER";
+
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+
+    public AuthService(UserRepository userRepository, RoleRepository roleRepository,
+                        PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
+    }
+
+    public LoginResponse register(RegisterRequest request) {
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new DuplicateResourceException("Username already taken: " + request.getUsername());
+        }
+        String roleName = request.getRoleName() != null ? request.getRoleName() : DEFAULT_ROLE;
+        Role role = roleRepository.findByRoleName(roleName)
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found: " + roleName));
+
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+        user.setFullName(request.getFullName());
+        user.setRole(role);
+        userRepository.save(user);
+
+        return buildLoginResponse(user);
+    }
+
+    public LoginResponse login(LoginRequest request) {
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
+            throw new BadCredentialsException("Invalid username or password");
+        }
+
+        return buildLoginResponse(user);
+    }
+
+    /**
+     * Sliding-session refresh: the caller's current token must still be valid (not expired); a
+     * brand new token with a fresh expiry is issued for the same user. There's no separate
+     * refresh-token entity/table here, which keeps things simple for this project's scope.
+     */
+    public LoginResponse refresh(String token) {
+        String username;
+        try {
+            username = jwtUtil.parseToken(token).getSubject();
+        } catch (Exception e) {
+            throw new BadCredentialsException("Invalid or expired token");
+        }
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new BadCredentialsException("Invalid or expired token"));
+        return buildLoginResponse(user);
+    }
+
+    private LoginResponse buildLoginResponse(User user) {
+        String token = jwtUtil.generateToken(user.getUsername(), user.getId(),
+                List.of(user.getRole().getRoleName()));
+        return new LoginResponse(token, user.getId(), user.getUsername(), user.getFullName(),
+                user.getRole().getRoleName());
+    }
+}

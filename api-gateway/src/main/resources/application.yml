@@ -1,0 +1,68 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+      routes:
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/api/auth/**
+        - id: room-service
+          uri: lb://ROOM-SERVICE
+          predicates:
+            - Path=/api/catalog/**
+        - id: booking-service
+          uri: lb://BOOKING-SERVICE
+          predicates:
+            - Path=/api/bookings/**
+        - id: billing-service
+          uri: lb://BILLING-SERVICE
+          predicates:
+            - Path=/api/billing/**
+        - id: notification-service
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/api/notifications/**
+        - id: review-service
+          uri: lb://REVIEW-SERVICE
+          predicates:
+            - Path=/api/reviews/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+jwt:
+  secret: ${JWT_SECRET:hotel-management-system-super-secret-key-change-in-production-min-256-bits}
+  expiration-ms: 86400000
+
+# Aggregates each downstream service's OpenAPI doc into one Swagger UI dropdown at /swagger-ui.html
+springdoc:
+  swagger-ui:
+    urls:
+      - name: auth-service
+        url: /api/auth/v3/api-docs
+      - name: room-service
+        url: /api/catalog/v3/api-docs
+      - name: booking-service
+        url: /api/bookings/v3/api-docs
+      - name: billing-service
+        url: /api/billing/v3/api-docs
+      - name: notification-service
+        url: /api/notifications/v3/api-docs
+      - name: review-service
+        url: /api/reviews/v3/api-docs
+
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
