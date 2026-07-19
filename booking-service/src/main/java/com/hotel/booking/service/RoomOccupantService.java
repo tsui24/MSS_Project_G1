@@ -7,6 +7,7 @@ import com.hotel.booking.entity.RoomOccupant;
 import com.hotel.booking.exception.ResourceNotFoundException;
 import com.hotel.booking.repository.RoomOccupantRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class RoomOccupantService {
         this.reservationRoomService = reservationRoomService;
     }
 
+    @Transactional(readOnly = true)
     public List<RoomOccupantResponse> getByReservationRoomId(Long reservationRoomId) {
         return roomOccupantRepository.findByReservationRoomId(reservationRoomId).stream()
                 .map(RoomOccupantResponse::new).toList();
@@ -33,6 +35,9 @@ public class RoomOccupantService {
         RoomOccupant occupant = new RoomOccupant();
         occupant.setReservationRoom(reservationRoom);
         occupant.setGuestName(request.getGuestName());
+        occupant.setPhoneNumber(request.getPhoneNumber());
+        occupant.setIdentityDocument(request.getIdentityDocument());
+        occupant.setResidence(request.getResidence());
         return new RoomOccupantResponse(roomOccupantRepository.save(occupant));
     }
 

@@ -30,8 +30,8 @@ public class ReservationController {
 
     @GetMapping
     @Operation(summary = "List reservations, paginated and optionally filtered by customer/status")
-    public ResponseEntity<Page<ReservationResponse>> search(@RequestParam(required = false) Long customerId,
-                                                             @RequestParam(required = false) BookingStatus status,
+    public ResponseEntity<Page<ReservationResponse>> search(@RequestParam(name = "customerId", required = false) Long customerId,
+                                                             @RequestParam(name = "status", required = false) BookingStatus status,
                                                              @PageableDefault(size = 20) Pageable pageable) {
         return ResponseEntity.ok(reservationService.search(customerId, status, pageable));
     }
@@ -44,7 +44,7 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a reservation by id")
-    public ResponseEntity<ReservationResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<ReservationResponse> getById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(reservationService.getById(id));
     }
 
@@ -56,32 +56,32 @@ public class ReservationController {
 
     @PatchMapping("/{id}/status")
     @Operation(summary = "Arbitrary booking status correction (prefer check-in/check-out/cancel for normal flow)")
-    public ResponseEntity<ReservationResponse> updateStatus(@PathVariable Long id,
+    public ResponseEntity<ReservationResponse> updateStatus(@PathVariable("id") Long id,
                                                               @Valid @RequestBody ReservationStatusUpdateRequest request) {
         return ResponseEntity.ok(reservationService.updateStatus(id, request.getBookingStatus()));
     }
 
     @PatchMapping("/{id}/check-in")
     @Operation(summary = "Check in a PENDING reservation, moving it to IN_HOUSE")
-    public ResponseEntity<ReservationResponse> checkIn(@PathVariable Long id) {
+    public ResponseEntity<ReservationResponse> checkIn(@PathVariable("id") Long id) {
         return ResponseEntity.ok(reservationService.checkIn(id));
     }
 
     @PatchMapping("/{id}/check-out")
     @Operation(summary = "Check out an IN_HOUSE reservation; releases its rooms to DIRTY for housekeeping")
-    public ResponseEntity<ReservationResponse> checkOut(@PathVariable Long id) {
+    public ResponseEntity<ReservationResponse> checkOut(@PathVariable("id") Long id) {
         return ResponseEntity.ok(reservationService.checkOut(id));
     }
 
     @PatchMapping("/{id}/cancel")
     @Operation(summary = "Cancel a PENDING reservation; releases any assigned rooms back to AVAILABLE")
-    public ResponseEntity<ReservationResponse> cancel(@PathVariable Long id) {
+    public ResponseEntity<ReservationResponse> cancel(@PathVariable("id") Long id) {
         return ResponseEntity.ok(reservationService.cancel(id));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a reservation")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         reservationService.delete(id);
         return ResponseEntity.noContent().build();
     }

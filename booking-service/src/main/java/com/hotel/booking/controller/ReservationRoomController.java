@@ -25,13 +25,13 @@ public class ReservationRoomController {
 
     @GetMapping
     @Operation(summary = "List room assignments for a reservation")
-    public ResponseEntity<List<ReservationRoomResponse>> getByReservation(@RequestParam Long reservationId) {
+    public ResponseEntity<List<ReservationRoomResponse>> getByReservation(@RequestParam(name = "reservationId") Long reservationId) {
         return ResponseEntity.ok(reservationRoomService.getByReservationId(reservationId));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a room assignment by id")
-    public ResponseEntity<ReservationRoomResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<ReservationRoomResponse> getById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(reservationRoomService.getById(id));
     }
 
@@ -43,7 +43,7 @@ public class ReservationRoomController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Release a room assignment (marks the room DIRTY for housekeeping)")
-    public ResponseEntity<Void> release(@PathVariable Long id) {
+    public ResponseEntity<Void> release(@PathVariable("id") Long id) {
         reservationRoomService.release(id);
         return ResponseEntity.noContent().build();
     }

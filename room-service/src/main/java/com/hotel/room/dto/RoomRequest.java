@@ -13,6 +13,7 @@ public class RoomRequest {
     private Long roomClassId;
 
     private RoomStatus status;
+    private String description;
 
     public String getRoomNumber() {
         return roomNumber;
@@ -36,5 +37,13 @@ public class RoomRequest {
 
     public void setStatus(RoomStatus status) {
         this.status = status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

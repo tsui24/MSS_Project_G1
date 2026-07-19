@@ -12,6 +12,20 @@ public class RoomDto {
     private Long id;
     private String roomNumber;
     private String status;
+    private RoomClassDto roomClass;
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class RoomClassDto {
+        private Long id;
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+    }
 
     public Long getId() {
         return id;
@@ -35,5 +49,13 @@ public class RoomDto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public RoomClassDto getRoomClass() {
+        return roomClass;
+    }
+
+    public void setRoomClass(RoomClassDto roomClass) {
+        this.roomClass = roomClass;
     }
 }

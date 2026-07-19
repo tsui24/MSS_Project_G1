@@ -25,7 +25,8 @@ public class RoomOccupantController {
 
     @GetMapping
     @Operation(summary = "List occupants for a room assignment")
-    public ResponseEntity<List<RoomOccupantResponse>> getByReservationRoom(@RequestParam Long reservationRoomId) {
+    public ResponseEntity<List<RoomOccupantResponse>> getByReservationRoom(
+            @RequestParam(name = "reservationRoomId") Long reservationRoomId) {
         return ResponseEntity.ok(roomOccupantService.getByReservationRoomId(reservationRoomId));
     }
 
@@ -37,7 +38,7 @@ public class RoomOccupantController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Remove a guest occupant")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable(name = "id") Long id) {
         roomOccupantService.delete(id);
         return ResponseEntity.noContent().build();
     }

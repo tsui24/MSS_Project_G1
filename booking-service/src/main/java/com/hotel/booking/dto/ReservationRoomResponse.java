@@ -11,6 +11,7 @@ public class ReservationRoomResponse {
     private Long roomId;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
+    private Integer guestCount;
 
     public ReservationRoomResponse(ReservationRoom reservationRoom) {
         this.id = reservationRoom.getId();
@@ -18,6 +19,7 @@ public class ReservationRoomResponse {
         this.roomId = reservationRoom.getRoomId();
         this.checkInDate = reservationRoom.getCheckInDate();
         this.checkOutDate = reservationRoom.getCheckOutDate();
+        this.guestCount = reservationRoom.getGuestCount();
     }
 
     public Long getId() {
@@ -39,4 +41,6 @@ public class ReservationRoomResponse {
     public LocalDate getCheckOutDate() {
         return checkOutDate;
     }
+
+    public Integer getGuestCount() { return guestCount; }
 }

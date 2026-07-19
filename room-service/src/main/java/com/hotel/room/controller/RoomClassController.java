@@ -31,7 +31,7 @@ public class RoomClassController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a room class by id")
-    public ResponseEntity<RoomClassResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<RoomClassResponse> getById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(roomClassService.getById(id));
     }
 
@@ -43,13 +43,14 @@ public class RoomClassController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update a room class")
-    public ResponseEntity<RoomClassResponse> update(@PathVariable Long id, @Valid @RequestBody RoomClassRequest request) {
+    public ResponseEntity<RoomClassResponse> update(@PathVariable("id") Long id,
+                                                     @Valid @RequestBody RoomClassRequest request) {
         return ResponseEntity.ok(roomClassService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a room class")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         roomClassService.delete(id);
         return ResponseEntity.noContent().build();
     }

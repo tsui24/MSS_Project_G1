@@ -34,6 +34,9 @@ public class RoomClassService {
         RoomClass roomClass = new RoomClass();
         roomClass.setClassName(request.getClassName());
         roomClass.setBasePrice(request.getBasePrice());
+        roomClass.setStandardOccupancy(request.getStandardOccupancy());
+        roomClass.setMaxOccupancy(request.getMaxOccupancy());
+        roomClass.setExtraPersonFee(request.getExtraPersonFee());
         return new RoomClassResponse(roomClassRepository.save(roomClass));
     }
 
@@ -41,6 +44,9 @@ public class RoomClassService {
         RoomClass roomClass = findEntity(id);
         roomClass.setClassName(request.getClassName());
         roomClass.setBasePrice(request.getBasePrice());
+        roomClass.setStandardOccupancy(request.getStandardOccupancy());
+        roomClass.setMaxOccupancy(request.getMaxOccupancy());
+        roomClass.setExtraPersonFee(request.getExtraPersonFee());
         return new RoomClassResponse(roomClassRepository.save(roomClass));
     }
 

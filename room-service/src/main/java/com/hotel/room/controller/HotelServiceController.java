@@ -31,7 +31,7 @@ public class HotelServiceController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a hotel service by id")
-    public ResponseEntity<HotelServiceResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<HotelServiceResponse> getById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.getById(id));
     }
 
@@ -43,13 +43,14 @@ public class HotelServiceController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update a hotel service")
-    public ResponseEntity<HotelServiceResponse> update(@PathVariable Long id, @Valid @RequestBody HotelServiceRequest request) {
+    public ResponseEntity<HotelServiceResponse> update(@PathVariable("id") Long id,
+                                                        @Valid @RequestBody HotelServiceRequest request) {
         return ResponseEntity.ok(service.update(id, request));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a hotel service")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }

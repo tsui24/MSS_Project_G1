@@ -18,6 +18,16 @@ public class RoomClass {
     @Column(name = "base_price", nullable = false, precision = 12, scale = 2)
     private BigDecimal basePrice;
 
+    @Column(name = "standard_occupancy", nullable = false, columnDefinition = "INT NOT NULL DEFAULT 1")
+    private Integer standardOccupancy = 1;
+
+    @Column(name = "max_occupancy", nullable = false, columnDefinition = "INT NOT NULL DEFAULT 2")
+    private Integer maxOccupancy = 2;
+
+    @Column(name = "extra_person_fee", nullable = false, precision = 12, scale = 2,
+            columnDefinition = "DECIMAL(12,2) NOT NULL DEFAULT 0.00")
+    private BigDecimal extraPersonFee = BigDecimal.ZERO;
+
     public Long getId() {
         return id;
     }
@@ -40,5 +50,29 @@ public class RoomClass {
 
     public void setBasePrice(BigDecimal basePrice) {
         this.basePrice = basePrice;
+    }
+
+    public Integer getStandardOccupancy() {
+        return standardOccupancy;
+    }
+
+    public void setStandardOccupancy(Integer standardOccupancy) {
+        this.standardOccupancy = standardOccupancy;
+    }
+
+    public Integer getMaxOccupancy() {
+        return maxOccupancy;
+    }
+
+    public void setMaxOccupancy(Integer maxOccupancy) {
+        this.maxOccupancy = maxOccupancy;
+    }
+
+    public BigDecimal getExtraPersonFee() {
+        return extraPersonFee;
+    }
+
+    public void setExtraPersonFee(BigDecimal extraPersonFee) {
+        this.extraPersonFee = extraPersonFee;
     }
 }

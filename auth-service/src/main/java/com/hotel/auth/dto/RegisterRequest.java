@@ -22,6 +22,10 @@ public class RegisterRequest {
      * let callers grant themselves staff privileges without one existing already.
      */
     private String roleName;
+    private String phoneNumber;
+    private String department;
+    private String employmentStatus;
+    private Boolean active;
 
     public String getUsername() {
         return username;
@@ -54,4 +58,13 @@ public class RegisterRequest {
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
+
+    public String getPhoneNumber() { return phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public String getDepartment() { return department; }
+    public void setDepartment(String department) { this.department = department; }
+    public String getEmploymentStatus() { return employmentStatus; }
+    public void setEmploymentStatus(String employmentStatus) { this.employmentStatus = employmentStatus; }
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
 }

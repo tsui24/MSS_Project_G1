@@ -49,11 +49,11 @@ public class ReservationService {
         } else {
             page = reservationRepository.findAll(pageable);
         }
-        return page.map(ReservationResponse::new);
+        return page.map(this::toResponse);
     }
 
     public ReservationResponse getById(Long id) {
-        return new ReservationResponse(findEntity(id));
+        return toResponse(findEntity(id));
     }
 
     public ReservationResponse create(ReservationRequest request) {
@@ -67,13 +67,13 @@ public class ReservationService {
         reservation.setBookingCode(request.getBookingCode());
         reservation.setCustomerId(request.getCustomerId());
         reservation.setBookingStatus(BookingStatus.PENDING);
-        return new ReservationResponse(reservationRepository.save(reservation));
+        return toResponse(reservationRepository.save(reservation));
     }
 
     public ReservationResponse updateStatus(Long id, BookingStatus status) {
         Reservation reservation = findEntity(id);
         reservation.setBookingStatus(status);
-        return new ReservationResponse(reservationRepository.save(reservation));
+        return toResponse(reservationRepository.save(reservation));
     }
 
     public ReservationResponse checkIn(Long id) {
@@ -83,7 +83,10 @@ public class ReservationService {
                     reservation.getBookingStatus() + ")");
         }
         reservation.setBookingStatus(BookingStatus.IN_HOUSE);
-        return new ReservationResponse(reservationRepository.save(reservation));
+        for (ReservationRoom assignedRoom : reservationRoomRepository.findByReservationId(id)) {
+            roomServiceClient.updateRoomStatus(assignedRoom.getRoomId(), "OCCUPIED");
+        }
+        return toResponse(reservationRepository.save(reservation));
     }
 
     public ReservationResponse checkOut(Long id) {
@@ -97,7 +100,7 @@ public class ReservationService {
 
         // Rooms need housekeeping after a guest leaves.
         releaseRooms(id, "DIRTY");
-        return new ReservationResponse(reservation);
+        return toResponse(reservation);
     }
 
     public ReservationResponse cancel(Long id) {
@@ -111,7 +114,7 @@ public class ReservationService {
 
         // Never occupied, so the room can go straight back to AVAILABLE instead of DIRTY.
         releaseRooms(id, "AVAILABLE");
-        return new ReservationResponse(reservation);
+        return toResponse(reservation);
     }
 
     public Map<BookingStatus, Long> getStatusStats() {
@@ -139,5 +142,16 @@ public class ReservationService {
     Reservation findEntity(Long id) {
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation not found with id: " + id));
+    }
+
+    private ReservationResponse toResponse(Reservation reservation) {
+        ReservationResponse response = new ReservationResponse(reservation);
+        response.setRoomAssignments(reservationRoomRepository.findByReservationId(reservation.getId()));
+        try {
+            response.setCustomer(authServiceClient.getUser(reservation.getCustomerId()));
+        } catch (RuntimeException ignored) {
+            // A temporary auth-service outage must not make the reservation list unavailable.
+        }
+        return response;
     }
 }

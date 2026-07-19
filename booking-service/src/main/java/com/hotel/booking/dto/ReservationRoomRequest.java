@@ -3,6 +3,7 @@ package com.hotel.booking.dto;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
 
 import java.time.LocalDate;
 
@@ -21,6 +22,10 @@ public class ReservationRoomRequest {
     @NotNull
     @Future
     private LocalDate checkOutDate;
+
+    @NotNull
+    @Min(1)
+    private Integer guestCount;
 
     public Long getReservationId() {
         return reservationId;
@@ -53,4 +58,8 @@ public class ReservationRoomRequest {
     public void setCheckOutDate(LocalDate checkOutDate) {
         this.checkOutDate = checkOutDate;
     }
+
+    public Integer getGuestCount() { return guestCount; }
+
+    public void setGuestCount(Integer guestCount) { this.guestCount = guestCount; }
 }

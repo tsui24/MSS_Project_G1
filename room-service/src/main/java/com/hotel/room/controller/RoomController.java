@@ -28,15 +28,15 @@ public class RoomController {
 
     @GetMapping
     @Operation(summary = "List rooms, paginated and optionally filtered by status/room class")
-    public ResponseEntity<Page<RoomResponse>> search(@RequestParam(required = false) RoomStatus status,
-                                                      @RequestParam(required = false) Long roomClassId,
+    public ResponseEntity<Page<RoomResponse>> search(@RequestParam(name = "status", required = false) RoomStatus status,
+                                                      @RequestParam(name = "roomClassId", required = false) Long roomClassId,
                                                       @PageableDefault(size = 20) Pageable pageable) {
         return ResponseEntity.ok(roomService.search(status, roomClassId, pageable));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a room by id")
-    public ResponseEntity<RoomResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<RoomResponse> getById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(roomService.getById(id));
     }
 
@@ -48,20 +48,21 @@ public class RoomController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update a room")
-    public ResponseEntity<RoomResponse> update(@PathVariable Long id, @Valid @RequestBody RoomRequest request) {
+    public ResponseEntity<RoomResponse> update(@PathVariable("id") Long id,
+                                                @Valid @RequestBody RoomRequest request) {
         return ResponseEntity.ok(roomService.update(id, request));
     }
 
     @PatchMapping("/{id}/status")
     @Operation(summary = "Update only a room's status (used by booking/housekeeping flows)")
-    public ResponseEntity<RoomResponse> updateStatus(@PathVariable Long id,
+    public ResponseEntity<RoomResponse> updateStatus(@PathVariable("id") Long id,
                                                       @Valid @RequestBody RoomStatusUpdateRequest request) {
         return ResponseEntity.ok(roomService.updateStatus(id, request.getStatus()));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a room")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         roomService.delete(id);
         return ResponseEntity.noContent().build();
     }

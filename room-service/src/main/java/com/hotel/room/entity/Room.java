@@ -21,6 +21,9 @@ public class Room {
     @Column(name = "status", nullable = false, length = 20)
     private RoomStatus status = RoomStatus.AVAILABLE;
 
+    @Column(name = "description", length = 1000)
+    private String description;
+
     public Long getId() {
         return id;
     }
@@ -51,5 +54,13 @@ public class Room {
 
     public void setStatus(RoomStatus status) {
         this.status = status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

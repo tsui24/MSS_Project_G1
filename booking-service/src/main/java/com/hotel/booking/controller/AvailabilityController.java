@@ -28,9 +28,9 @@ public class AvailabilityController {
     @GetMapping
     @Operation(summary = "Find AVAILABLE rooms (optionally of a given room class) free for the whole date range")
     public ResponseEntity<List<RoomDto>> search(
-            @RequestParam(required = false) Long roomClassId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate) {
+            @RequestParam(name = "roomClassId", required = false) Long roomClassId,
+            @RequestParam(name = "checkInDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
+            @RequestParam(name = "checkOutDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate) {
         return ResponseEntity.ok(availabilityService.findAvailableRooms(roomClassId, checkInDate, checkOutDate));
     }
 }

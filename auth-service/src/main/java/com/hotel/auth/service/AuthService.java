@@ -47,6 +47,10 @@ public class AuthService {
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         user.setFullName(request.getFullName());
         user.setRole(role);
+        user.setPhoneNumber(request.getPhoneNumber());
+        user.setDepartment(request.getDepartment());
+        user.setEmploymentStatus(request.getEmploymentStatus() != null ? request.getEmploymentStatus() : "AVAILABLE");
+        user.setActive(request.getActive() == null || request.getActive());
         userRepository.save(user);
 
         return buildLoginResponse(user);
@@ -55,6 +59,10 @@ public class AuthService {
     public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
+
+        if (!user.isActive()) {
+            throw new BadCredentialsException("Account is disabled");
+        }
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new BadCredentialsException("Invalid username or password");
@@ -77,6 +85,9 @@ public class AuthService {
         }
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new BadCredentialsException("Invalid or expired token"));
+        if (!user.isActive()) {
+            throw new BadCredentialsException("Account is disabled");
+        }
         return buildLoginResponse(user);
     }
 

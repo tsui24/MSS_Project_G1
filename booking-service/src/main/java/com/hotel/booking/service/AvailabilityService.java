@@ -40,7 +40,16 @@ public class AvailabilityService {
 
         return candidateRooms.stream()
                 .filter(room -> !bookedRoomIds.contains(room.getId()))
-                .filter(room -> "AVAILABLE".equals(room.getStatus()))
+                .filter(room -> isBookableForDate(room, checkInDate))
                 .toList();
+    }
+
+    private boolean isBookableForDate(RoomDto room, LocalDate checkInDate) {
+        if ("AVAILABLE".equals(room.getStatus())) {
+            return true;
+        }
+        // A dirty room may still be reserved for a future stay because housekeeping can
+        // complete it before check-in. Same-day stays still require an AVAILABLE room.
+        return "DIRTY".equals(room.getStatus()) && checkInDate.isAfter(LocalDate.now());
     }
 }

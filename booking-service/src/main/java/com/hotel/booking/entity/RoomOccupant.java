@@ -17,6 +17,15 @@ public class RoomOccupant {
     @Column(name = "guest_name", nullable = false, length = 150)
     private String guestName;
 
+    @Column(name = "phone_number", nullable = false, length = 30)
+    private String phoneNumber;
+
+    @Column(name = "identity_document", nullable = false, length = 50)
+    private String identityDocument;
+
+    @Column(name = "residence", nullable = false, length = 255)
+    private String residence;
+
     public Long getId() {
         return id;
     }
@@ -40,4 +49,11 @@ public class RoomOccupant {
     public void setGuestName(String guestName) {
         this.guestName = guestName;
     }
+
+    public String getPhoneNumber() { return phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public String getIdentityDocument() { return identityDocument; }
+    public void setIdentityDocument(String identityDocument) { this.identityDocument = identityDocument; }
+    public String getResidence() { return residence; }
+    public void setResidence(String residence) { this.residence = residence; }
 }

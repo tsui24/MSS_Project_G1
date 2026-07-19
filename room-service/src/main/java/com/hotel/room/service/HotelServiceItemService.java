@@ -34,6 +34,8 @@ public class HotelServiceItemService {
         HotelServiceItem item = new HotelServiceItem();
         item.setServiceName(request.getServiceName());
         item.setUnitPrice(request.getUnitPrice());
+        item.setCategory(request.getCategory());
+        item.setDescription(request.getDescription());
         return new HotelServiceResponse(repository.save(item));
     }
 
@@ -41,6 +43,8 @@ public class HotelServiceItemService {
         HotelServiceItem item = findEntity(id);
         item.setServiceName(request.getServiceName());
         item.setUnitPrice(request.getUnitPrice());
+        item.setCategory(request.getCategory());
+        item.setDescription(request.getDescription());
         return new HotelServiceResponse(repository.save(item));
     }
 

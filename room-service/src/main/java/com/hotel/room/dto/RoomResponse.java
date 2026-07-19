@@ -9,12 +9,14 @@ public class RoomResponse {
     private String roomNumber;
     private RoomClassResponse roomClass;
     private RoomStatus status;
+    private String description;
 
     public RoomResponse(Room room) {
         this.id = room.getId();
         this.roomNumber = room.getRoomNumber();
         this.roomClass = new RoomClassResponse(room.getRoomClass());
         this.status = room.getStatus();
+        this.description = room.getDescription();
     }
 
     public Long getId() {
@@ -31,5 +33,9 @@ public class RoomResponse {
 
     public RoomStatus getStatus() {
         return status;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

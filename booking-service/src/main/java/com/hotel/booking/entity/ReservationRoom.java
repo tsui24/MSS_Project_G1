@@ -26,6 +26,9 @@ public class ReservationRoom {
     @Column(name = "check_out_date", nullable = false)
     private LocalDate checkOutDate;
 
+    @Column(name = "guest_count", nullable = false)
+    private Integer guestCount = 1;
+
     public Long getId() {
         return id;
     }
@@ -65,4 +68,8 @@ public class ReservationRoom {
     public void setCheckOutDate(LocalDate checkOutDate) {
         this.checkOutDate = checkOutDate;
     }
+
+    public Integer getGuestCount() { return guestCount; }
+
+    public void setGuestCount(Integer guestCount) { this.guestCount = guestCount; }
 }

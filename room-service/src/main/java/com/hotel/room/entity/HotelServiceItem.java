@@ -22,6 +22,14 @@ public class HotelServiceItem {
     @Column(name = "unit_price", nullable = false, precision = 12, scale = 2)
     private BigDecimal unitPrice;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false, length = 30,
+            columnDefinition = "VARCHAR(30) NOT NULL DEFAULT 'SPA'")
+    private ServiceCategory category = ServiceCategory.SPA;
+
+    @Column(name = "description", length = 1000)
+    private String description;
+
     public Long getId() {
         return id;
     }
@@ -44,5 +52,21 @@ public class HotelServiceItem {
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public ServiceCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(ServiceCategory category) {
+        this.category = category;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

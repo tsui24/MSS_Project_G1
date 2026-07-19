@@ -27,10 +27,17 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Page<UserResponse> search(String roleName, Pageable pageable) {
-        Page<User> page = roleName != null
-                ? userRepository.findByRole_RoleName(roleName, pageable)
-                : userRepository.findAll(pageable);
+    public Page<UserResponse> search(String roleName, Boolean active, Pageable pageable) {
+        Page<User> page;
+        if (roleName != null && active != null) {
+            page = userRepository.findByRole_RoleNameAndActive(roleName, active, pageable);
+        } else if (roleName != null) {
+            page = userRepository.findByRole_RoleName(roleName, pageable);
+        } else if (active != null) {
+            page = userRepository.findByActive(active, pageable);
+        } else {
+            page = userRepository.findAll(pageable);
+        }
         return page.map(UserResponse::new);
     }
 
@@ -48,6 +55,12 @@ public class UserService {
                     .orElseThrow(() -> new ResourceNotFoundException("Role not found: " + request.getRoleName()));
             user.setRole(role);
         }
+        if (request.getActive() != null) {
+            user.setActive(request.getActive());
+        }
+        if (request.getPhoneNumber() != null) user.setPhoneNumber(request.getPhoneNumber());
+        if (request.getDepartment() != null) user.setDepartment(request.getDepartment());
+        if (request.getEmploymentStatus() != null) user.setEmploymentStatus(request.getEmploymentStatus());
         return new UserResponse(userRepository.save(user));
     }
 

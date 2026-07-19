@@ -4,6 +4,10 @@ public class UpdateUserRequest {
 
     private String fullName;
     private String roleName;
+    private Boolean active;
+    private String phoneNumber;
+    private String department;
+    private String employmentStatus;
 
     public String getFullName() {
         return fullName;
@@ -20,4 +24,19 @@ public class UpdateUserRequest {
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public String getPhoneNumber() { return phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public String getDepartment() { return department; }
+    public void setDepartment(String department) { this.department = department; }
+    public String getEmploymentStatus() { return employmentStatus; }
+    public void setEmploymentStatus(String employmentStatus) { this.employmentStatus = employmentStatus; }
 }
