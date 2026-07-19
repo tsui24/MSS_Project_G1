@@ -6,7 +6,8 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
-@Table(name = "folio_items")
+@Table(name = "folio_items", uniqueConstraints = @UniqueConstraint(
+        name = "uk_folio_item_reference", columnNames = {"folio_id", "reference_key"}))
 public class FolioItem {
 
     @Id
@@ -23,6 +24,10 @@ public class FolioItem {
 
     @Column(name = "amount", nullable = false, precision = 12, scale = 2)
     private BigDecimal amount;
+    @Column(name = "description", length = 255)
+    private String description;
+    @Column(name = "reference_key", length = 100)
+    private String referenceKey;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -67,4 +72,8 @@ public class FolioItem {
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public String getReferenceKey() { return referenceKey; }
+    public void setReferenceKey(String referenceKey) { this.referenceKey = referenceKey; }
 }

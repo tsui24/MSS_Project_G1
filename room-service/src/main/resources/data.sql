@@ -2,6 +2,21 @@
 -- VARCHAR keeps the database compatible when a new RoomStatus enum value is added in Java.
 ALTER TABLE rooms MODIFY COLUMN status VARCHAR(20) NOT NULL;
 
+-- Backfill lifecycle fields added to existing housekeeping tasks. Hibernate creates
+-- the columns before this script runs; COALESCE keeps the migration idempotent.
+UPDATE housekeeping_tasks
+SET started_at = COALESCE(started_at, created_at)
+WHERE status IN ('IN_PROGRESS', 'COMPLETED');
+
+UPDATE housekeeping_tasks
+SET completed_at = COALESCE(completed_at, created_at),
+    completed_steps = CASE WHEN task_type = 'CLEANING' THEN 9 ELSE 3 END
+WHERE status = 'COMPLETED';
+
+UPDATE housekeeping_tasks
+SET cancelled_at = COALESCE(cancelled_at, created_at)
+WHERE status = 'CANCELLED';
+
 INSERT INTO room_classes (class_name, standard_occupancy, max_occupancy, base_price)
 SELECT seed.class_name, seed.standard_occupancy, seed.max_occupancy, seed.base_price
 FROM (

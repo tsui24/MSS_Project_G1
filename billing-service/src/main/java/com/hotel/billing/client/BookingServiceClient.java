@@ -25,4 +25,8 @@ public class BookingServiceClient {
                 .bodyToMono(ReservationDto.class)
                 .block();
     }
+    public void checkOut(Long reservationId) {
+        webClient.patch().uri("/api/bookings/reservations/{id}/check-out", reservationId)
+                .retrieve().bodyToMono(Void.class).block();
+    }
 }

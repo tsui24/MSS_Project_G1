@@ -22,6 +22,14 @@ public class HousekeepingTask {
     private String previousRoomStatus;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "started_at")
+    private LocalDateTime startedAt;
+    @Column(name = "completed_at")
+    private LocalDateTime completedAt;
+    @Column(name = "cancelled_at")
+    private LocalDateTime cancelledAt;
+    @Column(name = "completed_steps", nullable = false)
+    private Integer completedSteps = 0;
 
     public Long getId() { return id; }
     public Room getRoom() { return room; }
@@ -37,4 +45,12 @@ public class HousekeepingTask {
     public String getPreviousRoomStatus() { return previousRoomStatus; }
     public void setPreviousRoomStatus(String previousRoomStatus) { this.previousRoomStatus = previousRoomStatus; }
     public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getStartedAt() { return startedAt; }
+    public void setStartedAt(LocalDateTime startedAt) { this.startedAt = startedAt; }
+    public LocalDateTime getCompletedAt() { return completedAt; }
+    public void setCompletedAt(LocalDateTime completedAt) { this.completedAt = completedAt; }
+    public LocalDateTime getCancelledAt() { return cancelledAt; }
+    public void setCancelledAt(LocalDateTime cancelledAt) { this.cancelledAt = cancelledAt; }
+    public Integer getCompletedSteps() { return completedSteps == null ? 0 : completedSteps; }
+    public void setCompletedSteps(Integer completedSteps) { this.completedSteps = completedSteps; }
 }

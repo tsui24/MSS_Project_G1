@@ -3,6 +3,7 @@ package com.hotel.room.controller;
 import com.hotel.room.dto.HousekeepingTaskRequest;
 import com.hotel.room.dto.HousekeepingTaskResponse;
 import com.hotel.room.dto.TaskStatusRequest;
+import com.hotel.room.dto.ChecklistStepRequest;
 import com.hotel.room.service.HousekeepingTaskService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,11 @@ public class HousekeepingTaskController {
     @PatchMapping("/{id}/status")
     public HousekeepingTaskResponse updateStatus(@PathVariable("id") Long id, @Valid @RequestBody TaskStatusRequest request) {
         return service.updateStatus(id, request.getStatus());
+    }
+    @PatchMapping("/{id}/checklist")
+    public HousekeepingTaskResponse updateChecklist(@PathVariable("id") Long id,
+                                                     @Valid @RequestBody ChecklistStepRequest request) {
+        return service.updateChecklist(id, request);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {

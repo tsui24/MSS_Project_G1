@@ -4,6 +4,8 @@ import com.hotel.booking.dto.RoomOccupantRequest;
 import com.hotel.booking.dto.RoomOccupantResponse;
 import com.hotel.booking.entity.ReservationRoom;
 import com.hotel.booking.entity.RoomOccupant;
+import com.hotel.booking.entity.BookingStatus;
+import com.hotel.booking.exception.InvalidStateException;
 import com.hotel.booking.exception.ResourceNotFoundException;
 import com.hotel.booking.repository.RoomOccupantRepository;
 import org.springframework.stereotype.Service;
@@ -29,8 +31,15 @@ public class RoomOccupantService {
                 .map(RoomOccupantResponse::new).toList();
     }
 
+    @Transactional
     public RoomOccupantResponse create(RoomOccupantRequest request) {
         ReservationRoom reservationRoom = reservationRoomService.findEntity(request.getReservationRoomId());
+        if (reservationRoom.getReservation().getBookingStatus() != BookingStatus.IN_HOUSE) {
+            throw new InvalidStateException("Occupants for a PENDING reservation must be submitted through atomic check-in");
+        }
+        if (roomOccupantRepository.countByReservationRoomId(reservationRoom.getId()) >= reservationRoom.getGuestCount()) {
+            throw new InvalidStateException("Room assignment already has its declared number of occupants");
+        }
 
         RoomOccupant occupant = new RoomOccupant();
         occupant.setReservationRoom(reservationRoom);

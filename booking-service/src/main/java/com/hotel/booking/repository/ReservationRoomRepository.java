@@ -21,4 +21,14 @@ public interface ReservationRoomRepository extends JpaRepository<ReservationRoom
     List<ReservationRoom> findOverlapping(@Param("roomIds") List<Long> roomIds,
                                            @Param("checkInDate") LocalDate checkInDate,
                                            @Param("checkOutDate") LocalDate checkOutDate);
+
+    @Query("SELECT rr FROM ReservationRoom rr WHERE rr.roomId = :roomId " +
+            "AND rr.reservation.id <> :reservationId " +
+            "AND rr.reservation.bookingStatus <> 'CANCELLED' " +
+            "AND rr.checkInDate < :checkOutDate AND rr.checkOutDate > :checkInDate")
+    List<ReservationRoom> findConflictsExcludingReservation(
+            @Param("roomId") Long roomId,
+            @Param("reservationId") Long reservationId,
+            @Param("checkInDate") LocalDate checkInDate,
+            @Param("checkOutDate") LocalDate checkOutDate);
 }

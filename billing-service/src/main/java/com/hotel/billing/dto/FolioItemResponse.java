@@ -13,6 +13,8 @@ public class FolioItemResponse {
     private FolioItemType itemType;
     private BigDecimal amount;
     private Instant createdAt;
+    private String description;
+    private String referenceKey;
 
     public FolioItemResponse(FolioItem item) {
         this.id = item.getId();
@@ -20,6 +22,8 @@ public class FolioItemResponse {
         this.itemType = item.getItemType();
         this.amount = item.getAmount();
         this.createdAt = item.getCreatedAt();
+        this.description = item.getDescription();
+        this.referenceKey = item.getReferenceKey();
     }
 
     public Long getId() {
@@ -41,4 +45,6 @@ public class FolioItemResponse {
     public Instant getCreatedAt() {
         return createdAt;
     }
+    public String getDescription() { return description; }
+    public String getReferenceKey() { return referenceKey; }
 }

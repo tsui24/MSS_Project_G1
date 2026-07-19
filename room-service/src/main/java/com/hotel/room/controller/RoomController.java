@@ -60,6 +60,18 @@ public class RoomController {
         return ResponseEntity.ok(roomService.updateStatus(id, request.getStatus()));
     }
 
+    @PatchMapping("/{id}/status/compensate-check-in")
+    @Operation(summary = "Compensate a failed distributed check-in by returning OCCUPIED to AVAILABLE")
+    public ResponseEntity<RoomResponse> compensateFailedCheckIn(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(roomService.compensateFailedCheckIn(id));
+    }
+
+    @PatchMapping("/{id}/status/occupy-if-available")
+    @Operation(summary = "Atomically occupy an AVAILABLE room for check-in")
+    public ResponseEntity<RoomResponse> occupyIfAvailable(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(roomService.occupyIfAvailable(id));
+    }
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a room")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {

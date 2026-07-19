@@ -6,6 +6,7 @@ import com.hotel.booking.entity.ReservationRoom;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.time.LocalDateTime;
 
 public class ReservationResponse {
 
@@ -17,12 +18,17 @@ public class ReservationResponse {
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
     private Integer numberOfRooms;
+    private LocalDateTime checkedInAt;
+    private LocalDateTime checkedOutAt;
+    private List<ReservationRoomResponse> roomAssignments;
 
     public ReservationResponse(Reservation reservation) {
         this.id = reservation.getId();
         this.bookingCode = reservation.getBookingCode();
         this.customerId = reservation.getCustomerId();
         this.bookingStatus = reservation.getBookingStatus();
+        this.checkedInAt = reservation.getCheckedInAt();
+        this.checkedOutAt = reservation.getCheckedOutAt();
     }
 
     public Long getId() {
@@ -56,6 +62,9 @@ public class ReservationResponse {
     public Integer getNumberOfRooms() {
         return numberOfRooms;
     }
+    public LocalDateTime getCheckedInAt() { return checkedInAt; }
+    public LocalDateTime getCheckedOutAt() { return checkedOutAt; }
+    public List<ReservationRoomResponse> getRoomAssignments() { return roomAssignments; }
 
     public void setCustomer(AuthUserDto customer) {
         this.customer = customer;
@@ -65,5 +74,6 @@ public class ReservationResponse {
         this.numberOfRooms = assignments.size();
         this.checkInDate = assignments.stream().map(ReservationRoom::getCheckInDate).min(LocalDate::compareTo).orElse(null);
         this.checkOutDate = assignments.stream().map(ReservationRoom::getCheckOutDate).max(LocalDate::compareTo).orElse(null);
+        this.roomAssignments = assignments.stream().map(ReservationRoomResponse::new).toList();
     }
 }

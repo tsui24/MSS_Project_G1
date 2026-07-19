@@ -1,6 +1,7 @@
 package com.hotel.booking.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "reservations")
@@ -20,6 +21,10 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     @Column(name = "booking_status", nullable = false, length = 20)
     private BookingStatus bookingStatus = BookingStatus.PENDING;
+    @Column(name = "checked_in_at")
+    private LocalDateTime checkedInAt;
+    @Column(name = "checked_out_at")
+    private LocalDateTime checkedOutAt;
 
     public Long getId() {
         return id;
@@ -52,4 +57,8 @@ public class Reservation {
     public void setBookingStatus(BookingStatus bookingStatus) {
         this.bookingStatus = bookingStatus;
     }
+    public LocalDateTime getCheckedInAt() { return checkedInAt; }
+    public void setCheckedInAt(LocalDateTime checkedInAt) { this.checkedInAt = checkedInAt; }
+    public LocalDateTime getCheckedOutAt() { return checkedOutAt; }
+    public void setCheckedOutAt(LocalDateTime checkedOutAt) { this.checkedOutAt = checkedOutAt; }
 }

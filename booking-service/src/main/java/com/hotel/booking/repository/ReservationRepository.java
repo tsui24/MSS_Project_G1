@@ -16,6 +16,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     Page<Reservation> findByBookingStatus(BookingStatus bookingStatus, Pageable pageable);
 
+    List<Reservation> findByBookingStatus(BookingStatus bookingStatus);
+
     Page<Reservation> findByCustomerIdAndBookingStatus(Long customerId, BookingStatus bookingStatus, Pageable pageable);
 
     @Query("SELECT r.bookingStatus, COUNT(r) FROM Reservation r GROUP BY r.bookingStatus")

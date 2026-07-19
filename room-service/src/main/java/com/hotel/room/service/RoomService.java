@@ -11,6 +11,7 @@ import com.hotel.room.repository.RoomRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RoomService {
@@ -60,6 +61,7 @@ public class RoomService {
         room.setRoomNumber(request.getRoomNumber());
         room.setRoomClass(roomClassService.findEntity(request.getRoomClassId()));
         if (request.getStatus() != null) {
+            validateStatusTransition(room.getStatus(), request.getStatus());
             room.setStatus(request.getStatus());
         }
         room.setDescription(request.getDescription());
@@ -68,6 +70,7 @@ public class RoomService {
 
     public RoomResponse updateStatus(Long id, RoomStatus status) {
         Room room = findEntity(id);
+        validateStatusTransition(room.getStatus(), status);
         room.setStatus(status);
         return new RoomResponse(roomRepository.save(room));
     }
@@ -79,5 +82,43 @@ public class RoomService {
     private Room findEntity(Long id) {
         return roomRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found with id: " + id));
+    }
+
+    public RoomResponse compensateFailedCheckIn(Long id) {
+        Room room = findEntity(id);
+        if (room.getStatus() == RoomStatus.OCCUPIED) {
+            room.setStatus(RoomStatus.AVAILABLE);
+        } else if (room.getStatus() != RoomStatus.AVAILABLE) {
+            throw new IllegalArgumentException("Cannot compensate check-in from room status " + room.getStatus());
+        }
+        return new RoomResponse(roomRepository.save(room));
+    }
+
+    @Transactional
+    public RoomResponse occupyIfAvailable(Long id) {
+        Room room = roomRepository.findByIdForUpdate(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with id: " + id));
+        if (room.getStatus() != RoomStatus.AVAILABLE) {
+            throw new IllegalArgumentException("Room " + room.getRoomNumber()
+                    + " is no longer AVAILABLE (current: " + room.getStatus() + ")");
+        }
+        room.setStatus(RoomStatus.OCCUPIED);
+        return new RoomResponse(roomRepository.save(room));
+    }
+
+    private void validateStatusTransition(RoomStatus current, RoomStatus target) {
+        if (current == target || target == RoomStatus.OCCUPIED) return;
+
+        boolean allowed = switch (current) {
+            case AVAILABLE -> target == RoomStatus.DIRTY || target == RoomStatus.MAINTENANCE;
+            case OCCUPIED -> target == RoomStatus.DIRTY;
+            case DIRTY -> target == RoomStatus.CLEANING || target == RoomStatus.AVAILABLE
+                    || target == RoomStatus.MAINTENANCE;
+            case CLEANING -> target == RoomStatus.AVAILABLE || target == RoomStatus.MAINTENANCE;
+            case MAINTENANCE -> target == RoomStatus.AVAILABLE || target == RoomStatus.DIRTY;
+        };
+        if (!allowed) {
+            throw new IllegalArgumentException("Invalid room status transition: " + current + " -> " + target);
+        }
     }
 }

@@ -12,4 +12,8 @@ public interface RoomOccupantRepository extends JpaRepository<RoomOccupant, Long
             "join fetch occupant.reservationRoom reservationRoom " +
             "where reservationRoom.id = :reservationRoomId order by occupant.id")
     List<RoomOccupant> findByReservationRoomId(@Param("reservationRoomId") Long reservationRoomId);
+
+    void deleteByReservationRoomId(Long reservationRoomId);
+
+    long countByReservationRoomId(Long reservationRoomId);
 }

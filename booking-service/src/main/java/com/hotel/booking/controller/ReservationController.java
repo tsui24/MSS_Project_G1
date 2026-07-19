@@ -3,6 +3,7 @@ package com.hotel.booking.controller;
 import com.hotel.booking.dto.ReservationRequest;
 import com.hotel.booking.dto.ReservationResponse;
 import com.hotel.booking.dto.ReservationStatusUpdateRequest;
+import com.hotel.booking.dto.CheckInRequest;
 import com.hotel.booking.entity.BookingStatus;
 import com.hotel.booking.service.ReservationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,6 +43,12 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.getStatusStats());
     }
 
+    @PostMapping("/reconcile-room-statuses")
+    @Operation(summary = "Repair room statuses owned by active IN_HOUSE reservations")
+    public ResponseEntity<Map<String, Long>> reconcileRoomStatuses() {
+        return ResponseEntity.ok(Map.of("updatedRooms", reservationService.reconcileInHouseRoomStatuses()));
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get a reservation by id")
     public ResponseEntity<ReservationResponse> getById(@PathVariable("id") Long id) {
@@ -62,9 +69,10 @@ public class ReservationController {
     }
 
     @PatchMapping("/{id}/check-in")
-    @Operation(summary = "Check in a PENDING reservation, moving it to IN_HOUSE")
-    public ResponseEntity<ReservationResponse> checkIn(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(reservationService.checkIn(id));
+    @Operation(summary = "Atomically assign rooms, register all occupants, and check in a PENDING reservation")
+    public ResponseEntity<ReservationResponse> checkIn(@PathVariable("id") Long id,
+                                                        @Valid @RequestBody CheckInRequest request) {
+        return ResponseEntity.ok(reservationService.checkIn(id, request));
     }
 
     @PatchMapping("/{id}/check-out")

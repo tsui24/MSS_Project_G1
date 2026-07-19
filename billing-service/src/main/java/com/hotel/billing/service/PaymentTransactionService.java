@@ -6,6 +6,7 @@ import com.hotel.billing.entity.Folio;
 import com.hotel.billing.entity.PaymentTransaction;
 import com.hotel.billing.entity.TransactionType;
 import com.hotel.billing.exception.ResourceNotFoundException;
+import com.hotel.billing.exception.InvalidStateException;
 import com.hotel.billing.repository.PaymentTransactionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,10 @@ public class PaymentTransactionService {
     @Transactional
     public PaymentTransactionResponse create(PaymentTransactionRequest request) {
         Folio folio = folioService.findEntity(request.getFolioId());
+        if (request.getTransactionType() != TransactionType.REFUND
+                && request.getAmount().compareTo(folio.getBalance()) > 0) {
+            throw new InvalidStateException("Payment cannot exceed outstanding balance: " + folio.getBalance());
+        }
 
         PaymentTransaction transaction = new PaymentTransaction();
         transaction.setFolio(folio);

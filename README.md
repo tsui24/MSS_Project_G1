@@ -1,4 +1,22 @@
-# Hotel Management System — Microservices
+# Hotel Management System - Microservices
+
+## Reconcile booking/room lifecycle data
+
+After deploying lifecycle changes, run the idempotent reconciliation script once.
+It repairs `IN_HOUSE`/`OCCUPIED` mismatches, cancels conflicting active
+housekeeping tasks, moves orphan `OCCUPIED` rooms to `DIRTY`, and verifies the
+resulting invariants.
+
+From the `MSS_Project_G1` directory in PowerShell:
+
+```powershell
+Get-Content -LiteralPath docker/reconcile-state.sql -Raw |
+  docker exec -i hotel-mysql mysql -uhotel_user -photel_pass --batch --raw
+```
+
+The first four verification result sets should be empty. Rows reported as
+`LEGACY_GUEST_COUNT_UNKNOWN` are deliberately not guessed because no occupant
+records exist from which to recover their original guest count.
 
 Spring Boot 3 / Spring Cloud 2023 microservices backend, split by business domain, with
 Eureka service discovery, a Spring Cloud Gateway entry point, MySQL-per-service, and
