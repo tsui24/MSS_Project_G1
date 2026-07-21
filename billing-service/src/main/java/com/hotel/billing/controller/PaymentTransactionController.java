@@ -11,6 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import com.hotel.billing.entity.PaymentMethod;
+import com.hotel.billing.entity.TransactionType;
 
 @RestController
 @RequestMapping("/api/billing/payments")
@@ -24,9 +28,20 @@ public class PaymentTransactionController {
     }
 
     @GetMapping
-    @Operation(summary = "List payment transactions for a folio")
-    public ResponseEntity<List<PaymentTransactionResponse>> getByFolio(@RequestParam("folioId") Long folioId) {
-        return ResponseEntity.ok(paymentTransactionService.getByFolioId(folioId));
+    @Operation(summary = "Search payment transactions")
+    public ResponseEntity<Page<PaymentTransactionResponse>> search(
+            @RequestParam(name="folioId", required=false) Long folioId,
+            @RequestParam(name="paymentMethod", required=false) PaymentMethod paymentMethod,
+            @RequestParam(name="type", required=false) TransactionType transactionType,
+            @RequestParam(name="code", required=false) String code,
+            @RequestParam(name="status", required=false) String status,
+            Pageable pageable) {
+        return ResponseEntity.ok(paymentTransactionService.search(folioId, paymentMethod, transactionType, code, status, pageable));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PaymentTransactionResponse> getById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(paymentTransactionService.getById(id));
     }
 
     @PostMapping
