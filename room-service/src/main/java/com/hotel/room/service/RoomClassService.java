@@ -7,7 +7,9 @@ import com.hotel.room.exception.DuplicateResourceException;
 import com.hotel.room.exception.ResourceNotFoundException;
 import com.hotel.room.repository.RoomClassRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,36 +29,38 @@ public class RoomClassService {
         return new RoomClassResponse(findEntity(id));
     }
 
+    @Transactional
     public RoomClassResponse create(RoomClassRequest request) {
         if (roomClassRepository.existsByClassName(request.getClassName())) {
             throw new DuplicateResourceException("Room class already exists: " + request.getClassName());
         }
         RoomClass roomClass = new RoomClass();
-        roomClass.setClassName(request.getClassName());
-        roomClass.setBasePrice(request.getBasePrice());
-        roomClass.setStandardOccupancy(request.getStandardOccupancy());
-        roomClass.setMaxOccupancy(request.getMaxOccupancy());
-        roomClass.setExtraPersonFee(request.getExtraPersonFee());
-        roomClass.setAmenities(request.getAmenities());
+        applyRequest(roomClass, request, true);
         return new RoomClassResponse(roomClassRepository.save(roomClass));
     }
 
+    @Transactional
     public RoomClassResponse update(Long id, RoomClassRequest request) {
         RoomClass roomClass = findEntity(id);
+        applyRequest(roomClass, request, false);
+        return new RoomClassResponse(roomClassRepository.save(roomClass));
+    }
+
+    public void delete(Long id) {
+        roomClassRepository.delete(findEntity(id));
+    }
+
+    private void applyRequest(RoomClass roomClass, RoomClassRequest request, boolean creating) {
         roomClass.setClassName(request.getClassName());
         roomClass.setBasePrice(request.getBasePrice());
         roomClass.setStandardOccupancy(request.getStandardOccupancy());
         roomClass.setMaxOccupancy(request.getMaxOccupancy());
         roomClass.setExtraPersonFee(request.getExtraPersonFee());
         if (request.getAmenities() != null) {
-            roomClass.getAmenities().clear();
-            roomClass.getAmenities().addAll(request.getAmenities());
+            roomClass.setAmenities(new ArrayList<>(request.getAmenities()));
+        } else if (creating) {
+            roomClass.setAmenities(new ArrayList<>());
         }
-        return new RoomClassResponse(roomClassRepository.save(roomClass));
-    }
-
-    public void delete(Long id) {
-        roomClassRepository.delete(findEntity(id));
     }
 
     RoomClass findEntity(Long id) {

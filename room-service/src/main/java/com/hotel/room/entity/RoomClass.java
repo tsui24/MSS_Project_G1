@@ -1,6 +1,8 @@
 package com.hotel.room.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -30,9 +32,8 @@ public class RoomClass {
             columnDefinition = "DECIMAL(12,2) NOT NULL DEFAULT 0.00")
     private BigDecimal extraPersonFee = BigDecimal.ZERO;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "room_class_amenities", joinColumns = @JoinColumn(name = "room_class_id"))
-    @Column(name = "amenity", nullable = false, length = 100)
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "amenities", columnDefinition = "json")
     private List<String> amenities = new ArrayList<>();
 
     public Long getId() {

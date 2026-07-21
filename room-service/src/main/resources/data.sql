@@ -23,15 +23,33 @@ UPDATE housekeeping_tasks
 SET cancelled_at = COALESCE(cancelled_at, created_at)
 WHERE status = 'CANCELLED';
 
-INSERT INTO room_classes (class_name, standard_occupancy, max_occupancy, base_price)
-SELECT seed.class_name, seed.standard_occupancy, seed.max_occupancy, seed.base_price
+INSERT INTO room_classes (class_name, standard_occupancy, max_occupancy, base_price, amenities)
+SELECT seed.class_name, seed.standard_occupancy, seed.max_occupancy, seed.base_price, seed.amenities
 FROM (
-    SELECT 'Standard' AS class_name, 1 AS standard_occupancy, 2 AS max_occupancy, 800000.00 AS base_price
-    UNION ALL SELECT 'Deluxe', 2, 3, 1200000.00
-    UNION ALL SELECT 'Suite', 2, 4, 2000000.00
-    UNION ALL SELECT 'Family', 3, 6, 2500000.00
+    SELECT 'Standard' AS class_name, 1 AS standard_occupancy, 2 AS max_occupancy, 800000.00 AS base_price,
+           CAST('["Wi-Fi","Air conditioning","TV"]' AS JSON) AS amenities
+    UNION ALL SELECT 'Deluxe', 2, 3, 1200000.00, CAST('["Wi-Fi","Air conditioning","Mini fridge","Bathtub"]' AS JSON)
+    UNION ALL SELECT 'Suite', 2, 4, 2000000.00, CAST('["Wi-Fi","Living area","Kitchenette","Bathtub"]' AS JSON)
+    UNION ALL SELECT 'Family', 3, 6, 2500000.00, CAST('["Wi-Fi","Extra beds","Air conditioning"]' AS JSON)
 ) AS seed
 WHERE NOT EXISTS (SELECT 1 FROM room_classes);
+
+-- Backfill amenities JSON for existing room classes that still have NULL.
+UPDATE room_classes
+SET amenities = CAST('["Wi-Fi","Air conditioning","TV"]' AS JSON)
+WHERE class_name = 'Standard' AND (amenities IS NULL OR amenities = CAST('null' AS JSON) OR JSON_LENGTH(amenities) = 0);
+
+UPDATE room_classes
+SET amenities = CAST('["Wi-Fi","Air conditioning","Mini fridge","Bathtub"]' AS JSON)
+WHERE class_name = 'Deluxe' AND (amenities IS NULL OR amenities = CAST('null' AS JSON) OR JSON_LENGTH(amenities) = 0);
+
+UPDATE room_classes
+SET amenities = CAST('["Wi-Fi","Living area","Kitchenette","Bathtub"]' AS JSON)
+WHERE class_name = 'Suite' AND (amenities IS NULL OR amenities = CAST('null' AS JSON) OR JSON_LENGTH(amenities) = 0);
+
+UPDATE room_classes
+SET amenities = CAST('["Wi-Fi","Extra beds","Air conditioning"]' AS JSON)
+WHERE class_name = 'Family' AND (amenities IS NULL OR amenities = CAST('null' AS JSON) OR JSON_LENGTH(amenities) = 0);
 
 -- Re-runnable local test inventory. Existing room numbers are preserved.
 INSERT IGNORE INTO rooms (room_number, room_class_id, status, description, floor)
@@ -51,31 +69,6 @@ FROM (
     UNION ALL SELECT '403', 'SupFamily', 'DIRTY', 'Large family room awaiting cleaning', 4
 ) seed
 JOIN room_classes rc ON rc.class_name = seed.class_name;
-
--- Seed amenities for room classes (table created by Hibernate @ElementCollection).
-INSERT INTO room_class_amenities (room_class_id, amenity)
-SELECT rc.id, seed.amenity
-FROM (
-    SELECT 'Standard' AS class_name, 'Wi-Fi' AS amenity
-    UNION ALL SELECT 'Standard', 'Air conditioning'
-    UNION ALL SELECT 'Standard', 'TV'
-    UNION ALL SELECT 'Deluxe', 'Wi-Fi'
-    UNION ALL SELECT 'Deluxe', 'Air conditioning'
-    UNION ALL SELECT 'Deluxe', 'Mini fridge'
-    UNION ALL SELECT 'Deluxe', 'Bathtub'
-    UNION ALL SELECT 'Suite', 'Wi-Fi'
-    UNION ALL SELECT 'Suite', 'Living area'
-    UNION ALL SELECT 'Suite', 'Kitchenette'
-    UNION ALL SELECT 'Suite', 'Bathtub'
-    UNION ALL SELECT 'Family', 'Wi-Fi'
-    UNION ALL SELECT 'Family', 'Extra beds'
-    UNION ALL SELECT 'Family', 'Air conditioning'
-) seed
-JOIN room_classes rc ON rc.class_name = seed.class_name
-WHERE NOT EXISTS (
-    SELECT 1 FROM room_class_amenities a
-    WHERE a.room_class_id = rc.id AND a.amenity = seed.amenity
-);
 
 INSERT INTO hotel_services (service_name, category, unit_price, description, duration, availability)
 SELECT seed.service_name, seed.category, seed.unit_price, seed.description, seed.duration, seed.availability
