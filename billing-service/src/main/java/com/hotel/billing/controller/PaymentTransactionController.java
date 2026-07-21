@@ -25,7 +25,7 @@ public class PaymentTransactionController {
 
     @GetMapping
     @Operation(summary = "List payment transactions for a folio")
-    public ResponseEntity<List<PaymentTransactionResponse>> getByFolio(@RequestParam Long folioId) {
+    public ResponseEntity<List<PaymentTransactionResponse>> getByFolio(@RequestParam("folioId") Long folioId) {
         return ResponseEntity.ok(paymentTransactionService.getByFolioId(folioId));
     }
 
@@ -37,7 +37,7 @@ public class PaymentTransactionController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Void a payment transaction")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         paymentTransactionService.delete(id);
         return ResponseEntity.noContent().build();
     }

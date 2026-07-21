@@ -48,8 +48,10 @@ public class AvailabilityService {
         if ("AVAILABLE".equals(room.getStatus())) {
             return true;
         }
-        // A dirty room may still be reserved for a future stay because housekeeping can
-        // complete it before check-in. Same-day stays still require an AVAILABLE room.
-        return "DIRTY".equals(room.getStatus()) && checkInDate.isAfter(LocalDate.now());
+        // Physical status describes the room right now, not on a future arrival date.
+        // For a future stay, OCCUPIED/DIRTY/CLEANING rooms remain sellable when the
+        // reservation-overlap query proves that the previous stay ends by check-in.
+        // MAINTENANCE remains blocked until an administrator explicitly releases it.
+        return checkInDate.isAfter(LocalDate.now()) && !"MAINTENANCE".equals(room.getStatus());
     }
 }

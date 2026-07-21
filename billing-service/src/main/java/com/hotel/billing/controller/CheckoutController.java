@@ -11,11 +11,11 @@ public class CheckoutController {
     private final CheckoutService service;
     public CheckoutController(CheckoutService service){this.service=service;}
     @GetMapping("/{reservationId}")
-    public ResponseEntity<CheckoutSummaryResponse> summary(@PathVariable Long reservationId){
+    public ResponseEntity<CheckoutSummaryResponse> summary(@PathVariable("reservationId") Long reservationId){
         return ResponseEntity.ok(service.prepare(reservationId));
     }
     @PostMapping("/{reservationId}/finalize")
-    public ResponseEntity<CheckoutSummaryResponse> finalizeCheckout(@PathVariable Long reservationId){
+    public ResponseEntity<CheckoutSummaryResponse> finalizeCheckout(@PathVariable("reservationId") Long reservationId){
         return ResponseEntity.ok(service.finalizeCheckout(reservationId));
     }
 }

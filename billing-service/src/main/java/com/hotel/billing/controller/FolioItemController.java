@@ -25,7 +25,7 @@ public class FolioItemController {
 
     @GetMapping
     @Operation(summary = "List charge items for a folio")
-    public ResponseEntity<List<FolioItemResponse>> getByFolio(@RequestParam Long folioId) {
+    public ResponseEntity<List<FolioItemResponse>> getByFolio(@RequestParam("folioId") Long folioId) {
         return ResponseEntity.ok(folioItemService.getByFolioId(folioId));
     }
 
@@ -37,7 +37,7 @@ public class FolioItemController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Void a charge item (decreases the folio balance back)")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         folioItemService.delete(id);
         return ResponseEntity.noContent().build();
     }

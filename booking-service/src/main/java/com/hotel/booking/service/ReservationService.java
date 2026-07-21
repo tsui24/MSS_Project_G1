@@ -176,8 +176,15 @@ public class ReservationService {
         return stats;
     }
 
+    @Transactional
     public void delete(Long id) {
-        reservationRepository.delete(findEntity(id));
+        Reservation reservation = findEntity(id);
+        // Reservation creation is a multi-request flow in the clients. Removing the
+        // child assignments first lets a failed flow roll back without leaving an
+        // empty reservation or violating the reservation_rooms foreign key.
+        reservationRoomRepository.deleteAll(reservationRoomRepository.findByReservationId(id));
+        reservationRoomRepository.flush();
+        reservationRepository.delete(reservation);
     }
 
     private void releaseRooms(Long reservationId, String roomStatus) {

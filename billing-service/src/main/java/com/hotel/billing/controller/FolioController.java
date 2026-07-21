@@ -39,13 +39,13 @@ public class FolioController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a folio by id")
-    public ResponseEntity<FolioResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<FolioResponse> getById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(folioService.getById(id));
     }
 
     @GetMapping("/{id}/statement")
     @Operation(summary = "Full statement for a folio: balance plus all charge items and payments")
-    public ResponseEntity<FolioStatementResponse> getStatement(@PathVariable Long id) {
+    public ResponseEntity<FolioStatementResponse> getStatement(@PathVariable("id") Long id) {
         return ResponseEntity.ok(folioService.getStatement(id));
     }
 
@@ -57,7 +57,7 @@ public class FolioController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a folio")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         folioService.delete(id);
         return ResponseEntity.noContent().build();
     }

@@ -18,6 +18,7 @@ public class ReservationResponse {
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
     private Integer numberOfRooms;
+    private Integer numberOfMembers;
     private LocalDateTime checkedInAt;
     private LocalDateTime checkedOutAt;
     private List<ReservationRoomResponse> roomAssignments;
@@ -62,6 +63,7 @@ public class ReservationResponse {
     public Integer getNumberOfRooms() {
         return numberOfRooms;
     }
+    public Integer getNumberOfMembers() { return numberOfMembers; }
     public LocalDateTime getCheckedInAt() { return checkedInAt; }
     public LocalDateTime getCheckedOutAt() { return checkedOutAt; }
     public List<ReservationRoomResponse> getRoomAssignments() { return roomAssignments; }
@@ -72,6 +74,7 @@ public class ReservationResponse {
 
     public void setRoomAssignments(List<ReservationRoom> assignments) {
         this.numberOfRooms = assignments.size();
+        this.numberOfMembers = assignments.stream().mapToInt(assignment -> assignment.getGuestCount() == null ? 0 : assignment.getGuestCount()).sum();
         this.checkInDate = assignments.stream().map(ReservationRoom::getCheckInDate).min(LocalDate::compareTo).orElse(null);
         this.checkOutDate = assignments.stream().map(ReservationRoom::getCheckOutDate).max(LocalDate::compareTo).orElse(null);
         this.roomAssignments = assignments.stream().map(ReservationRoomResponse::new).toList();

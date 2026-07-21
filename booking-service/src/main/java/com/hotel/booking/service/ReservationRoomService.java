@@ -45,9 +45,9 @@ public class ReservationRoomService {
         Reservation reservation = reservationService.findEntity(request.getReservationId());
 
         RoomDto room = roomServiceClient.getRoom(request.getRoomId());
-        boolean futureDirtyRoom = "DIRTY".equals(room.getStatus())
-                && request.getCheckInDate().isAfter(java.time.LocalDate.now());
-        if (!"AVAILABLE".equals(room.getStatus()) && !futureDirtyRoom) {
+        boolean futureBookableRoom = request.getCheckInDate().isAfter(java.time.LocalDate.now())
+                && !"MAINTENANCE".equals(room.getStatus());
+        if (!"AVAILABLE".equals(room.getStatus()) && !futureBookableRoom) {
             throw new InvalidStateException("Room " + room.getRoomNumber() + " cannot be booked for this check-in date (current status: " + room.getStatus() + ")");
         }
 
