@@ -6,6 +6,7 @@ public class UpdateUserRequest {
     private String roleName;
     private Boolean active;
     private String phoneNumber;
+    private String identityCard;
     private String department;
     private String employmentStatus;
 
@@ -35,6 +36,8 @@ public class UpdateUserRequest {
 
     public String getPhoneNumber() { return phoneNumber; }
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public String getIdentityCard() { return identityCard; }
+    public void setIdentityCard(String identityCard) { this.identityCard = identityCard; }
     public String getDepartment() { return department; }
     public void setDepartment(String department) { this.department = department; }
     public String getEmploymentStatus() { return employmentStatus; }

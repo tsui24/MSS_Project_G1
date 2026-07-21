@@ -59,6 +59,10 @@ public class UserService {
             user.setActive(request.getActive());
         }
         if (request.getPhoneNumber() != null) user.setPhoneNumber(request.getPhoneNumber());
+        if (request.getIdentityCard() != null) {
+            String identityCard = request.getIdentityCard().trim();
+            user.setIdentityCard(identityCard.isEmpty() ? null : identityCard);
+        }
         if (request.getDepartment() != null) user.setDepartment(request.getDepartment());
         if (request.getEmploymentStatus() != null) user.setEmploymentStatus(request.getEmploymentStatus());
         return new UserResponse(userRepository.save(user));

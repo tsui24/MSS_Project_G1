@@ -1,0 +1,88 @@
+Feature,Function Name,Screen Name,Complexity,Planned Code Iteration,Student No,In-charge Full Name,Actual Code Iteration,SRS Status,Design Status,Coding Status,Testing Status,% Completed,Completed in Iteration
+Infrastructure - Eureka Registry,registerService / discoverService,Eureka Dashboard,Medium,1,HE182163,Hoàng Hải Nam,1,Done,Done,Done,Done,100%,1
+Infrastructure - API Gateway JWT Filter,filter / validateJwt / forwardXUserHeaders,API Gateway Entry,High,1,HE182163,Hoàng Hải Nam,1,Done,Done,Done,Done,100%,1
+Infrastructure - Common Security JwtUtil,generateToken / validateToken / extractClaims,Shared JWT Library,High,1,HE182163,Hoàng Hải Nam,1,Done,Done,Done,Done,100%,1
+Auth - Register,register,Register Screen,Medium,1,HE182163,Hoàng Hải Nam,1,Done,Done,Done,Done,100%,1
+Auth - Login,login,Login Screen,Medium,1,HE182163,Hoàng Hải Nam,1,Done,Done,Done,Done,100%,1
+Auth - Refresh Token,refresh,Session Refresh,Medium,1,HE182163,Hoàng Hải Nam,1,Done,Done,Done,Done,100%,1
+Auth - Current Profile,me,My Profile Screen,Low,1,HE182163,Hoàng Hải Nam,1,Done,Done,Done,Done,100%,1
+Auth - Change Own Password,changeMyPassword,Change Password Screen,Low,1,HE182163,Hoàng Hải Nam,1,Done,Done,Done,Done,100%,1
+Auth - List Users,search,User Management List,Medium,2,HE182163,Hoàng Hải Nam,2,Done,Done,Done,Done,100%,2
+Auth - Get User,getById,User Detail Screen,Low,2,HE182163,Hoàng Hải Nam,2,Done,Done,Done,Done,100%,2
+Auth - Update User / Role,update,Edit User Screen,Medium,2,HE182163,Hoàng Hải Nam,2,Done,Done,Done,Done,100%,2
+Auth - Change User Password,changePassword,Admin Reset Password,Low,2,HE182163,Hoàng Hải Nam,2,Done,Done,Done,Done,100%,2
+Auth - Delete User,delete,User Management List,Low,2,HE182163,Hoàng Hải Nam,2,Done,Done,Done,Done,100%,2
+Auth - Role CRUD,getAll / getById / create / update / delete,Role Management Screen,Medium,2,HE182163,Hoàng Hải Nam,2,Done,Done,Done,Done,100%,2
+Auth - List Shifts,shifts,Shift Catalog Screen,Low,3,HE182575,Nguyễn Xuân Long,3,Done,Done,Done,Done,100%,3
+Auth - Search Schedules,schedules,Staff Schedule Screen,Medium,3,HE182575,Nguyễn Xuân Long,3,Done,Done,Done,Done,100%,3
+Auth - Create Schedules,create,Create Staff Schedule,Medium,3,HE182575,Nguyễn Xuân Long,3,Done,Done,Done,Done,100%,3
+Auth - Delete Schedule,delete,Staff Schedule Screen,Low,3,HE182575,Nguyễn Xuân Long,3,Done,Done,Done,Done,100%,3
+Booking - Check Availability,search / findAvailableRooms,Room Availability Search,High,2,HE182163,Hoàng Hải Nam,2,Done,Done,Done,Done,100%,2
+Booking - List Reservations,search,Reservation List Screen,Medium,2,HE182163,Hoàng Hải Nam,2,Done,Done,Done,Done,100%,2
+Booking - Reservation Stats,getStats,Booking Dashboard,Medium,2,HE182163,Hoàng Hải Nam,2,Done,Done,Done,Done,100%,2
+Booking - Reconcile Room Statuses,reconcileRoomStatuses,Admin Reconcile Tool,High,3,HE182163,Hoàng Hải Nam,3,Done,Done,Done,Done,100%,3
+Booking - Get Reservation,getById,Reservation Detail Screen,Low,2,HE182163,Hoàng Hải Nam,2,Done,Done,Done,Done,100%,2
+Booking - Create Reservation,create,Create Reservation Screen,High,2,HE182163,Hoàng Hải Nam,2,Done,Done,Done,Done,100%,2
+Booking - Update Status,updateStatus,Admin Status Correction,Medium,3,HE182163,Hoàng Hải Nam,3,Done,Done,Done,Done,100%,3
+Booking - Check-in,checkIn,Check-in Screen,High,3,HE182163,Hoàng Hải Nam,3,Done,Done,Done,Done,100%,3
+Booking - Check-out,checkOut,Check-out Screen,High,3,HE182163,Hoàng Hải Nam,3,Done,Done,Done,Done,100%,3
+Booking - Cancel Reservation,cancel,Reservation Detail Screen,Medium,3,HE182163,Hoàng Hải Nam,3,Done,Done,Done,Done,100%,3
+Booking - Delete Reservation,delete,Reservation List Screen,Low,3,HE182163,Hoàng Hải Nam,3,Done,Done,Done,Done,100%,3
+Booking - List Reservation Rooms,getByReservation,Reservation Rooms Screen,Low,3,HE182163,Hoàng Hải Nam,3,Done,Done,Done,Done,100%,3
+Booking - Get Reservation Room,getById,Reservation Room Detail,Low,3,HE182163,Hoàng Hải Nam,3,Done,Done,Done,Done,100%,3
+Booking - Assign Room,assignRoom,Assign Room Screen,High,3,HE182163,Hoàng Hải Nam,3,Done,Done,Done,Done,100%,3
+Booking - Release Room Assignment,release,Reservation Rooms Screen,Medium,3,HE182163,Hoàng Hải Nam,3,Done,Done,Done,Done,100%,3
+Booking - List Occupants,getByReservationRoom,Guest Occupants Screen,Low,3,HE182163,Hoàng Hải Nam,3,Done,Done,Done,Done,100%,3
+Booking - Create Occupant,create,Register Occupant Screen,Medium,3,HE182163,Hoàng Hải Nam,3,Done,Done,Done,Done,100%,3
+Booking - Delete Occupant,delete,Guest Occupants Screen,Low,3,HE182163,Hoàng Hải Nam,3,Done,Done,Done,Done,100%,3
+Room - List Rooms,search,Room Inventory List,Medium,1,HE182575,Nguyễn Xuân Long,1,Done,Done,Done,Done,100%,1
+Room - Get Room,getById,Room Detail Screen,Low,1,HE182575,Nguyễn Xuân Long,1,Done,Done,Done,Done,100%,1
+Room - Create Room,create,Create Room Screen,Medium,1,HE182575,Nguyễn Xuân Long,1,Done,Done,Done,Done,100%,1
+Room - Update Room,update,Edit Room Screen,Medium,1,HE182575,Nguyễn Xuân Long,1,Done,Done,Done,Done,100%,1
+Room - Update Room Status,updateStatus,Housekeeping Status Screen,Medium,2,HE182170,Nguyễn Thế Hùng,2,Done,Done,Done,Done,100%,2
+Room - Compensate Failed Check-in,compensateFailedCheckIn,Internal Saga Compensation,High,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Room - Occupy If Available,occupyIfAvailable,Internal Check-in Lock,High,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Room - Delete Room,delete,Room Inventory List,Low,2,HE182575,Nguyễn Xuân Long,2,Done,Done,Done,Done,100%,2
+Room Class - List / Get,getAll / getById,Room Class Catalog,Low,1,HE182170,Nguyễn Thế Hùng,1,Done,Done,Done,Done,100%,1
+Room Class - Create / Update / Delete,create / update / delete,Manage Room Class,Medium,1,HE182575,Nguyễn Xuân Long,1,Done,Done,Done,Done,100%,1
+Hotel Service - List / Get,getAll / getById,Hotel Service Menu,Low,2,HE181466,Nguyễn Quang Anh,2,Done,Done,Done,Done,100%,2
+Hotel Service - Create / Update / Delete,create / update / delete,Manage Hotel Service,Medium,2,HE181466,Nguyễn Quang Anh,2,Done,Done,Done,Done,100%,2
+Housekeeping - List Tasks,findAll,Housekeeping Task Board,Medium,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Housekeeping - Get Task,get,Housekeeping Task Detail,Low,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Housekeeping - Create Task,create,Create Housekeeping Task,Medium,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Housekeeping - Update Task Status,updateStatus,Housekeeping Task Board,Medium,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Housekeeping - Update Checklist,updateChecklist,Housekeeping Checklist Screen,Medium,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Housekeeping - Delete Task,delete,Housekeeping Task Board,Low,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Damage Report - List Reports,find,Damage Report List,Medium,3,HE182575,Nguyễn Xuân Long,3,Done,Done,Done,Done,100%,3
+Damage Report - Create Report,create,Create Damage Report,Medium,3,HE182575,Nguyễn Xuân Long,3,Done,Done,Done,Done,100%,3
+Billing - List Folios,getAll,Folio List Screen,Medium,2,HE182170,Nguyễn Thế Hùng,2,Done,Done,Done,Done,100%,2
+Billing - Unpaid Folios,getUnpaid,Unpaid Folios Screen,Medium,2,HE182170,Nguyễn Thế Hùng,2,Done,Done,Done,Done,100%,2
+Billing - Get Folio,getById,Folio Detail Screen,Low,2,HE182170,Nguyễn Thế Hùng,2,Done,Done,Done,Done,100%,2
+Billing - Folio Statement,getStatement,Folio Statement Screen,High,2,HE182170,Nguyễn Thế Hùng,2,Done,Done,Done,Done,100%,2
+Billing - Create Folio,create,Open Folio Screen,High,2,HE182170,Nguyễn Thế Hùng,2,Done,Done,Done,Done,100%,2
+Billing - Delete Folio,delete,Folio List Screen,Low,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Billing - List Folio Items,getByFolio,Folio Charges Screen,Low,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Billing - Create Folio Item,create,Post Charge Screen,Medium,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Billing - Delete Folio Item,delete,Folio Charges Screen,Low,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Billing - List Payments,getByFolio,Payment History Screen,Low,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Billing - Create Payment,create,Record Payment Screen,High,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Billing - Delete Payment,delete,Payment History Screen,Low,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Billing - Revenue Report,getRevenue,Revenue Report Screen,High,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Billing - Checkout Summary,summary,Checkout Summary Screen,High,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Billing - Finalize Checkout,finalizeCheckout,Finalize Checkout Screen,High,3,HE182170,Nguyễn Thế Hùng,3,Done,Done,Done,Done,100%,3
+Notification - List Notifications,search,Notification Inbox,Medium,2,HE182575,Nguyễn Xuân Long,2,Done,Done,Done,Done,100%,2
+Notification - Get Notification,getById,Notification Detail,Low,2,HE182575,Nguyễn Xuân Long,2,Done,Done,Done,Done,100%,2
+Notification - Send Notification,create,Send Notification Screen,Medium,2,HE182575,Nguyễn Xuân Long,2,Done,Done,Done,Done,100%,2
+Notification - Delete Notification,delete,Notification Inbox,Low,2,HE182575,Nguyễn Xuân Long,2,Done,Done,Done,Done,100%,2
+Notification Template - List Templates,getAll,Template Management Screen,Low,3,HE182575,Nguyễn Xuân Long,3,Done,Done,Done,Done,100%,3
+Notification Template - Create Template,create,Create Template Screen,Medium,3,HE182575,Nguyễn Xuân Long,3,Done,Done,Done,Done,100%,3
+Notification Template - Update Template,update,Edit Template Screen,Medium,3,HE182575,Nguyễn Xuân Long,3,Done,Done,Done,Done,100%,3
+Notification Template - Delete Template,delete,Template Management Screen,Low,3,HE182575,Nguyễn Xuân Long,3,Done,Done,Done,Done,100%,3
+Review - List Reviews,search,Review List Screen,Medium,2,HE182089,Nguyễn Tá Văn,2,Done,Done,Done,Done,100%,2
+Review - Room Average Rating,averageForRoom,Room Rating Summary,Medium,2,HE182089,Nguyễn Tá Văn,2,Done,Done,Done,Done,100%,2
+Review - Create Review,create,Submit Review Screen,Medium,2,HE182089,Nguyễn Tá Văn,2,Done,Done,Done,Done,100%,2
+Review - Update Review,update,Edit Review Screen,Low,3,HE182089,Nguyễn Tá Văn,3,Done,Done,Done,Done,100%,3
+Review - Delete Review,delete,Review List Screen,Low,3,HE182089,Nguyễn Tá Văn,3,Done,Done,Done,Done,100%,3
+Review Reply - List Replies,getByReview,Staff Reply Screen,Low,3,HE182089,Nguyễn Tá Văn,3,Done,Done,Done,Done,100%,3
+Review Reply - Create Reply,create,Staff Reply Screen,Medium,3,HE182089,Nguyễn Tá Văn,3,Done,Done,Done,Done,100%,3
+Review Reply - Delete Reply,delete,Staff Reply Screen,Low,3,HE182089,Nguyễn Tá Văn,3,Done,Done,Done,Done,100%,3
