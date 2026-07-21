@@ -9,6 +9,10 @@ import com.hotel.billing.exception.ResourceNotFoundException;
 import com.hotel.billing.exception.InvalidStateException;
 import com.hotel.billing.repository.PaymentTransactionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import com.hotel.billing.entity.PaymentMethod;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -27,6 +31,33 @@ public class PaymentTransactionService {
     public List<PaymentTransactionResponse> getByFolioId(Long folioId) {
         return paymentTransactionRepository.findByFolioId(folioId).stream()
                 .map(PaymentTransactionResponse::new).toList();
+    }
+
+    public Page<PaymentTransactionResponse> search(Long folioId, PaymentMethod paymentMethod,
+                                                    TransactionType transactionType, String code,
+                                                    String status, Pageable pageable) {
+        Specification<PaymentTransaction> specification = Specification.where(null);
+        if (folioId != null) specification = specification.and((root, query, cb) -> cb.equal(root.get("folio").get("id"), folioId));
+        if (paymentMethod != null) specification = specification.and((root, query, cb) -> cb.equal(root.get("paymentMethod"), paymentMethod));
+        if (transactionType != null) specification = specification.and((root, query, cb) -> cb.equal(root.get("transactionType"), transactionType));
+        if (status != null && !status.isBlank() && !"SUCCESS".equalsIgnoreCase(status)) {
+            specification = specification.and((root, query, cb) -> cb.disjunction());
+        }
+        if (code != null && !code.isBlank()) {
+            String numeric = code.toUpperCase().replace("PAY-", "").trim();
+            try {
+                Long id = Long.valueOf(numeric);
+                specification = specification.and((root, query, cb) -> cb.equal(root.get("id"), id));
+            } catch (NumberFormatException ignored) {
+                specification = specification.and((root, query, cb) -> cb.disjunction());
+            }
+        }
+        return paymentTransactionRepository.findAll(specification, pageable).map(PaymentTransactionResponse::new);
+    }
+
+    public PaymentTransactionResponse getById(Long id) {
+        return paymentTransactionRepository.findById(id).map(PaymentTransactionResponse::new)
+                .orElseThrow(() -> new ResourceNotFoundException("Payment transaction not found with id: " + id));
     }
 
     @Transactional

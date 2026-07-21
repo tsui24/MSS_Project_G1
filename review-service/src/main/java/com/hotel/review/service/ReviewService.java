@@ -19,6 +19,9 @@ public class ReviewService {
     }
 
     public Page<ReviewResponse> getByRoomId(Long roomId, Pageable pageable) {
+        if (roomId == null) {
+            return reviewRepository.findAll(pageable).map(ReviewResponse::new);
+        }
         return reviewRepository.findByRoomId(roomId, pageable).map(ReviewResponse::new);
     }
 

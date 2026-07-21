@@ -48,4 +48,8 @@ public class PaymentTransactionResponse {
     public Instant getCreatedAt() {
         return createdAt;
     }
+
+    public String getCode() { return id == null ? null : "PAY-" + id; }
+    public TransactionType getType() { return transactionType; }
+    public String getStatus() { return "SUCCESS"; }
 }
