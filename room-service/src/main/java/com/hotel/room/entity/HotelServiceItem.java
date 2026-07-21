@@ -30,6 +30,14 @@ public class HotelServiceItem {
     @Column(name = "description", length = 1000)
     private String description;
 
+    /** Service length in minutes (e.g. spa massage). Nullable for items without a fixed duration. */
+    @Column(name = "duration")
+    private Integer duration;
+
+    /** Whether the service can currently be ordered. */
+    @Column(name = "availability", nullable = false)
+    private boolean availability = true;
+
     public Long getId() {
         return id;
     }
@@ -68,5 +76,21 @@ public class HotelServiceItem {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    public boolean isAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(boolean availability) {
+        this.availability = availability;
     }
 }

@@ -12,6 +12,8 @@ public class HotelServiceResponse {
     private BigDecimal unitPrice;
     private ServiceCategory category;
     private String description;
+    private Integer duration;
+    private boolean availability;
 
     public HotelServiceResponse(HotelServiceItem item) {
         this.id = item.getId();
@@ -19,6 +21,8 @@ public class HotelServiceResponse {
         this.unitPrice = item.getUnitPrice();
         this.category = item.getCategory();
         this.description = item.getDescription();
+        this.duration = item.getDuration();
+        this.availability = item.isAvailability();
     }
 
     public Long getId() {
@@ -39,5 +43,13 @@ public class HotelServiceResponse {
 
     public String getDescription() {
         return description;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public boolean isAvailability() {
+        return availability;
     }
 }

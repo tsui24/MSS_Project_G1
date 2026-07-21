@@ -32,24 +32,31 @@ public class HotelServiceItemService {
             throw new DuplicateResourceException("Service already exists: " + request.getServiceName());
         }
         HotelServiceItem item = new HotelServiceItem();
-        item.setServiceName(request.getServiceName());
-        item.setUnitPrice(request.getUnitPrice());
-        item.setCategory(request.getCategory());
-        item.setDescription(request.getDescription());
+        applyRequest(item, request, true);
         return new HotelServiceResponse(repository.save(item));
     }
 
     public HotelServiceResponse update(Long id, HotelServiceRequest request) {
         HotelServiceItem item = findEntity(id);
-        item.setServiceName(request.getServiceName());
-        item.setUnitPrice(request.getUnitPrice());
-        item.setCategory(request.getCategory());
-        item.setDescription(request.getDescription());
+        applyRequest(item, request, false);
         return new HotelServiceResponse(repository.save(item));
     }
 
     public void delete(Long id) {
         repository.delete(findEntity(id));
+    }
+
+    private void applyRequest(HotelServiceItem item, HotelServiceRequest request, boolean creating) {
+        item.setServiceName(request.getServiceName());
+        item.setUnitPrice(request.getUnitPrice());
+        item.setCategory(request.getCategory());
+        item.setDescription(request.getDescription());
+        item.setDuration(request.getDuration());
+        if (request.getAvailability() != null) {
+            item.setAvailability(request.getAvailability());
+        } else if (creating) {
+            item.setAvailability(true);
+        }
     }
 
     private HotelServiceItem findEntity(Long id) {

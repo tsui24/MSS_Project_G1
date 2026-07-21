@@ -46,12 +46,12 @@ FROM (
 ) seed
 JOIN room_classes rc ON rc.class_name = seed.class_name;
 
-INSERT INTO hotel_services (service_name, category, unit_price, description)
-SELECT seed.service_name, seed.category, seed.unit_price, seed.description
+INSERT INTO hotel_services (service_name, category, unit_price, description, duration, availability)
+SELECT seed.service_name, seed.category, seed.unit_price, seed.description, seed.duration, seed.availability
 FROM (
     SELECT 'Aroma Massage' AS service_name, 'SPA' AS category, 450000.00 AS unit_price,
-           'A relaxing full-body aroma massage.' AS description
-    UNION ALL SELECT 'Minibar Soft Drink', 'MINIBAR', 40000.00, 'Chilled soft drink delivered to your room.'
-    UNION ALL SELECT 'Breakfast Set', 'F_AND_B', 180000.00, 'Hotel breakfast set for one guest.'
+           'A relaxing full-body aroma massage.' AS description, 60 AS duration, TRUE AS availability
+    UNION ALL SELECT 'Minibar Soft Drink', 'MINIBAR', 40000.00, 'Chilled soft drink delivered to your room.', NULL, TRUE
+    UNION ALL SELECT 'Breakfast Set', 'F_AND_B', 180000.00, 'Hotel breakfast set for one guest.', NULL, TRUE
 ) AS seed
 WHERE NOT EXISTS (SELECT 1 FROM hotel_services);
