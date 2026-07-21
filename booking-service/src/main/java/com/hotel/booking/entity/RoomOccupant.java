@@ -17,13 +17,13 @@ public class RoomOccupant {
     @Column(name = "guest_name", nullable = false, length = 150)
     private String guestName;
 
-    @Column(name = "phone_number", nullable = false, length = 30)
+    @Column(name = "phone_number", nullable = true, length = 30)
     private String phoneNumber;
 
     @Column(name = "identity_document", nullable = false, length = 50)
     private String identityDocument;
 
-    @Column(name = "residence", nullable = false, length = 255)
+    @Column(name = "residence", nullable = true, length = 255)
     private String residence;
 
     public Long getId() {

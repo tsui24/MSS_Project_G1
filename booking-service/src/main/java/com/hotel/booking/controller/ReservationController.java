@@ -68,6 +68,13 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.updateStatus(id, request.getBookingStatus()));
     }
 
+    @PatchMapping("/{id}/identity-card")
+    @Operation(summary = "Update identity card on a PENDING reservation")
+    public ResponseEntity<ReservationResponse> updateIdentityCard(@PathVariable("id") Long id,
+                                                                    @RequestBody ReservationRequest request) {
+        return ResponseEntity.ok(reservationService.updateIdentityCard(id, request.getIdentityCard()));
+    }
+
     @PatchMapping("/{id}/check-in")
     @Operation(summary = "Atomically assign rooms, register all occupants, and check in a PENDING reservation")
     public ResponseEntity<ReservationResponse> checkIn(@PathVariable("id") Long id,

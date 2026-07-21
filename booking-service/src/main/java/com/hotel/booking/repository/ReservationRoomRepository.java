@@ -18,7 +18,7 @@ public interface ReservationRoomRepository extends JpaRepository<ReservationRoom
     @Query("SELECT rr FROM ReservationRoom rr WHERE rr.roomId IN :roomIds " +
             "AND rr.reservation.bookingStatus <> 'CANCELLED' " +
             "AND rr.checkInDate < :checkOutDate AND rr.checkOutDate > :checkInDate")
-    List<ReservationRoom> findOverlapping(@Param("roomIds") List<Long> roomIds,
+    List<ReservationRoom> findOverlappingWithoutExclusion(@Param("roomIds") List<Long> roomIds,
                                            @Param("checkInDate") LocalDate checkInDate,
                                            @Param("checkOutDate") LocalDate checkOutDate);
 
@@ -31,4 +31,18 @@ public interface ReservationRoomRepository extends JpaRepository<ReservationRoom
             @Param("reservationId") Long reservationId,
             @Param("checkInDate") LocalDate checkInDate,
             @Param("checkOutDate") LocalDate checkOutDate);
+
+    /**
+     * Rooms already booked (any non-cancelled reservation EXCEPT the given reservation) whose stay
+     * overlaps the requested [checkIn, checkOut) range, restricted to the given candidate room ids.
+     */
+    @Query("SELECT rr FROM ReservationRoom rr WHERE rr.roomId IN :roomIds " +
+            "AND (:excludeReservationId IS NULL OR rr.reservation.id <> :excludeReservationId) " +
+            "AND rr.reservation.bookingStatus <> 'CANCELLED' " +
+            "AND rr.checkInDate < :checkOutDate AND rr.checkOutDate > :checkInDate")
+    List<ReservationRoom> findOverlapping(
+            @Param("roomIds") List<Long> roomIds,
+            @Param("checkInDate") LocalDate checkInDate,
+            @Param("checkOutDate") LocalDate checkOutDate,
+            @Param("excludeReservationId") Long excludeReservationId);
 }

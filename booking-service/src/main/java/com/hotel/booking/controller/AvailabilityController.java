@@ -30,7 +30,8 @@ public class AvailabilityController {
     public ResponseEntity<List<RoomDto>> search(
             @RequestParam(name = "roomClassId", required = false) Long roomClassId,
             @RequestParam(name = "checkInDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
-            @RequestParam(name = "checkOutDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate) {
-        return ResponseEntity.ok(availabilityService.findAvailableRooms(roomClassId, checkInDate, checkOutDate));
+            @RequestParam(name = "checkOutDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
+            @RequestParam(name = "excludeReservationId", required = false) Long excludeReservationId) {
+        return ResponseEntity.ok(availabilityService.findAvailableRooms(roomClassId, checkInDate, checkOutDate, excludeReservationId));
     }
 }

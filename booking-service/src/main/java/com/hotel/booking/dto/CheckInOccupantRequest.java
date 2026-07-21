@@ -4,9 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 
 public class CheckInOccupantRequest {
     @NotBlank private String guestName;
-    @NotBlank private String phoneNumber;
+    private String phoneNumber;      // Optional
     @NotBlank private String identityDocument;
-    @NotBlank private String residence;
+    private String residence;         // Optional
 
     public String getGuestName() { return guestName; }
     public void setGuestName(String guestName) { this.guestName = guestName; }

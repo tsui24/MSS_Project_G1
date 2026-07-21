@@ -25,6 +25,13 @@ public class AvailabilityService {
 
     /** Rooms of the given class (or all rooms, if roomClassId is null) with no overlapping booking in the date range. */
     public List<RoomDto> findAvailableRooms(Long roomClassId, LocalDate checkInDate, LocalDate checkOutDate) {
+        return findAvailableRooms(roomClassId, checkInDate, checkOutDate, null);
+    }
+
+    /** Rooms of the given class (or all rooms, if roomClassId is null) with no overlapping booking in the date range,
+     * optionally excluding rooms that belong to a specific reservation (used when editing a reservation). */
+    public List<RoomDto> findAvailableRooms(Long roomClassId, LocalDate checkInDate, LocalDate checkOutDate,
+                                            Long excludeReservationId) {
         if (!checkOutDate.isAfter(checkInDate)) {
             throw new InvalidStateException("checkOutDate must be after checkInDate");
         }
@@ -35,7 +42,7 @@ public class AvailabilityService {
         }
 
         List<Long> roomIds = candidateRooms.stream().map(RoomDto::getId).toList();
-        Set<Long> bookedRoomIds = reservationRoomRepository.findOverlapping(roomIds, checkInDate, checkOutDate)
+        Set<Long> bookedRoomIds = reservationRoomRepository.findOverlapping(roomIds, checkInDate, checkOutDate, excludeReservationId)
                 .stream().map(ReservationRoom::getRoomId).collect(Collectors.toSet());
 
         return candidateRooms.stream()

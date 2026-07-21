@@ -11,6 +11,8 @@ public class ReservationRequest {
     @NotNull
     private Long customerId;
 
+    private String identityCard;
+
     public String getBookingCode() {
         return bookingCode;
     }
@@ -25,5 +27,13 @@ public class ReservationRequest {
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
+    }
+
+    public String getIdentityCard() {
+        return identityCard;
+    }
+
+    public void setIdentityCard(String identityCard) {
+        this.identityCard = identityCard;
     }
 }

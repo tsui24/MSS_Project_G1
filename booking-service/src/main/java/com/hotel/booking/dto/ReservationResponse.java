@@ -21,6 +21,7 @@ public class ReservationResponse {
     private Integer numberOfMembers;
     private LocalDateTime checkedInAt;
     private LocalDateTime checkedOutAt;
+    private String identityCard;
     private List<ReservationRoomResponse> roomAssignments;
 
     public ReservationResponse(Reservation reservation) {
@@ -30,6 +31,7 @@ public class ReservationResponse {
         this.bookingStatus = reservation.getBookingStatus();
         this.checkedInAt = reservation.getCheckedInAt();
         this.checkedOutAt = reservation.getCheckedOutAt();
+        this.identityCard = reservation.getIdentityCard();
     }
 
     public Long getId() {
@@ -71,6 +73,9 @@ public class ReservationResponse {
     public void setCustomer(AuthUserDto customer) {
         this.customer = customer;
     }
+
+    public String getIdentityCard() { return identityCard; }
+    public void setIdentityCard(String identityCard) { this.identityCard = identityCard; }
 
     public void setRoomAssignments(List<ReservationRoom> assignments) {
         this.numberOfRooms = assignments.size();

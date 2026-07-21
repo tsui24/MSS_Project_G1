@@ -25,6 +25,8 @@ public class Reservation {
     private LocalDateTime checkedInAt;
     @Column(name = "checked_out_at")
     private LocalDateTime checkedOutAt;
+    @Column(name = "identity_card", length = 20)
+    private String identityCard;
 
     public Long getId() {
         return id;
@@ -61,4 +63,6 @@ public class Reservation {
     public void setCheckedInAt(LocalDateTime checkedInAt) { this.checkedInAt = checkedInAt; }
     public LocalDateTime getCheckedOutAt() { return checkedOutAt; }
     public void setCheckedOutAt(LocalDateTime checkedOutAt) { this.checkedOutAt = checkedOutAt; }
+    public String getIdentityCard() { return identityCard; }
+    public void setIdentityCard(String identityCard) { this.identityCard = identityCard; }
 }

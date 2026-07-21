@@ -52,7 +52,7 @@ public class ReservationRoomService {
         }
 
         List<ReservationRoom> overlapping = reservationRoomRepository.findOverlapping(
-                List.of(request.getRoomId()), request.getCheckInDate(), request.getCheckOutDate());
+                List.of(request.getRoomId()), request.getCheckInDate(), request.getCheckOutDate(), null);
         if (!overlapping.isEmpty()) {
             throw new InvalidStateException("Room " + room.getRoomNumber() +
                     " is already booked for an overlapping date range");

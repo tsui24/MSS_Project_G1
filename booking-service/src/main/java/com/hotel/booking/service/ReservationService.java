@@ -83,6 +83,7 @@ public class ReservationService {
         reservation.setBookingCode(request.getBookingCode());
         reservation.setCustomerId(request.getCustomerId());
         reservation.setBookingStatus(BookingStatus.PENDING);
+        reservation.setIdentityCard(request.getIdentityCard());
         return toResponse(reservationRepository.save(reservation));
     }
 
@@ -96,6 +97,16 @@ public class ReservationService {
             case CANCELLED -> cancel(id);
             case PENDING -> throw new InvalidStateException("A reservation cannot transition back to PENDING");
         };
+    }
+
+    public ReservationResponse updateIdentityCard(Long id, String identityCard) {
+        Reservation reservation = findEntity(id);
+        if (reservation.getBookingStatus() != BookingStatus.PENDING) {
+            throw new InvalidStateException("Only a PENDING reservation's identity card can be updated (current: "
+                    + reservation.getBookingStatus() + ")");
+        }
+        reservation.setIdentityCard(identityCard);
+        return toResponse(reservationRepository.save(reservation));
     }
 
     @Transactional
@@ -306,9 +317,11 @@ public class ReservationService {
         RoomOccupant occupant = new RoomOccupant();
         occupant.setReservationRoom(assignment);
         occupant.setGuestName(requested.getGuestName().trim());
-        occupant.setPhoneNumber(requested.getPhoneNumber().trim());
+        occupant.setPhoneNumber(requested.getPhoneNumber() != null && !requested.getPhoneNumber().isBlank()
+                ? requested.getPhoneNumber().trim() : "");
         occupant.setIdentityDocument(requested.getIdentityDocument().trim());
-        occupant.setResidence(requested.getResidence().trim());
+        occupant.setResidence(requested.getResidence() != null && !requested.getResidence().isBlank()
+                ? requested.getResidence().trim() : "");
         return occupant;
     }
 
