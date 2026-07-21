@@ -37,6 +37,7 @@ public class RoomClassService {
         roomClass.setStandardOccupancy(request.getStandardOccupancy());
         roomClass.setMaxOccupancy(request.getMaxOccupancy());
         roomClass.setExtraPersonFee(request.getExtraPersonFee());
+        roomClass.setAmenities(request.getAmenities());
         return new RoomClassResponse(roomClassRepository.save(roomClass));
     }
 
@@ -47,6 +48,10 @@ public class RoomClassService {
         roomClass.setStandardOccupancy(request.getStandardOccupancy());
         roomClass.setMaxOccupancy(request.getMaxOccupancy());
         roomClass.setExtraPersonFee(request.getExtraPersonFee());
+        if (request.getAmenities() != null) {
+            roomClass.getAmenities().clear();
+            roomClass.getAmenities().addAll(request.getAmenities());
+        }
         return new RoomClassResponse(roomClassRepository.save(roomClass));
     }
 

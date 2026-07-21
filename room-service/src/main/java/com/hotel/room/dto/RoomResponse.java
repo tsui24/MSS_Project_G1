@@ -10,6 +10,7 @@ public class RoomResponse {
     private RoomClassResponse roomClass;
     private RoomStatus status;
     private String description;
+    private Integer floor;
 
     public RoomResponse(Room room) {
         this.id = room.getId();
@@ -17,6 +18,7 @@ public class RoomResponse {
         this.roomClass = new RoomClassResponse(room.getRoomClass());
         this.status = room.getStatus();
         this.description = room.getDescription();
+        this.floor = room.getFloor();
     }
 
     public Long getId() {
@@ -37,5 +39,9 @@ public class RoomResponse {
 
     public String getDescription() {
         return description;
+    }
+
+    public Integer getFloor() {
+        return floor;
     }
 }

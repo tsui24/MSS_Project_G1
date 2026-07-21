@@ -2,6 +2,12 @@
 -- VARCHAR keeps the database compatible when a new RoomStatus enum value is added in Java.
 ALTER TABLE rooms MODIFY COLUMN status VARCHAR(20) NOT NULL;
 
+-- Backfill floor from room number prefix when the column is new/null.
+UPDATE rooms
+SET floor = CAST(LEFT(room_number, 1) AS UNSIGNED)
+WHERE floor IS NULL
+  AND room_number REGEXP '^[0-9]';
+
 -- Backfill lifecycle fields added to existing housekeeping tasks. Hibernate creates
 -- the columns before this script runs; COALESCE keeps the migration idempotent.
 UPDATE housekeeping_tasks
@@ -28,23 +34,48 @@ FROM (
 WHERE NOT EXISTS (SELECT 1 FROM room_classes);
 
 -- Re-runnable local test inventory. Existing room numbers are preserved.
-INSERT IGNORE INTO rooms (room_number, room_class_id, status, description)
-SELECT seed.room_number, rc.id, seed.status, seed.description
+INSERT IGNORE INTO rooms (room_number, room_class_id, status, description, floor)
+SELECT seed.room_number, rc.id, seed.status, seed.description, seed.floor
 FROM (
-    SELECT '101' AS room_number, 'Standard' AS class_name, 'AVAILABLE' AS status, 'Standard room on floor 1' AS description
-    UNION ALL SELECT '102', 'Standard', 'AVAILABLE', 'Standard room on floor 1'
-    UNION ALL SELECT '103', 'Standard', 'DIRTY', 'Standard room awaiting cleaning'
-    UNION ALL SELECT '202', 'Suite', 'AVAILABLE', 'Suite room on floor 2'
-    UNION ALL SELECT '203', 'Suite', 'AVAILABLE', 'Suite room on floor 2'
-    UNION ALL SELECT '204', 'Suite', 'MAINTENANCE', 'Suite room under maintenance'
-    UNION ALL SELECT '301', 'Family', 'AVAILABLE', 'Family room on floor 3'
-    UNION ALL SELECT '302', 'Family', 'AVAILABLE', 'Family room on floor 3'
-    UNION ALL SELECT '303', 'Family', 'OCCUPIED', 'Occupied family room for status testing'
-    UNION ALL SELECT '401', 'SupFamily', 'AVAILABLE', 'Large family room on floor 4'
-    UNION ALL SELECT '402', 'SupFamily', 'AVAILABLE', 'Large family room on floor 4'
-    UNION ALL SELECT '403', 'SupFamily', 'DIRTY', 'Large family room awaiting cleaning'
+    SELECT '101' AS room_number, 'Standard' AS class_name, 'AVAILABLE' AS status, 'Standard room on floor 1' AS description, 1 AS floor
+    UNION ALL SELECT '102', 'Standard', 'AVAILABLE', 'Standard room on floor 1', 1
+    UNION ALL SELECT '103', 'Standard', 'DIRTY', 'Standard room awaiting cleaning', 1
+    UNION ALL SELECT '202', 'Suite', 'AVAILABLE', 'Suite room on floor 2', 2
+    UNION ALL SELECT '203', 'Suite', 'AVAILABLE', 'Suite room on floor 2', 2
+    UNION ALL SELECT '204', 'Suite', 'MAINTENANCE', 'Suite room under maintenance', 2
+    UNION ALL SELECT '301', 'Family', 'AVAILABLE', 'Family room on floor 3', 3
+    UNION ALL SELECT '302', 'Family', 'AVAILABLE', 'Family room on floor 3', 3
+    UNION ALL SELECT '303', 'Family', 'OCCUPIED', 'Occupied family room for status testing', 3
+    UNION ALL SELECT '401', 'SupFamily', 'AVAILABLE', 'Large family room on floor 4', 4
+    UNION ALL SELECT '402', 'SupFamily', 'AVAILABLE', 'Large family room on floor 4', 4
+    UNION ALL SELECT '403', 'SupFamily', 'DIRTY', 'Large family room awaiting cleaning', 4
 ) seed
 JOIN room_classes rc ON rc.class_name = seed.class_name;
+
+-- Seed amenities for room classes (table created by Hibernate @ElementCollection).
+INSERT INTO room_class_amenities (room_class_id, amenity)
+SELECT rc.id, seed.amenity
+FROM (
+    SELECT 'Standard' AS class_name, 'Wi-Fi' AS amenity
+    UNION ALL SELECT 'Standard', 'Air conditioning'
+    UNION ALL SELECT 'Standard', 'TV'
+    UNION ALL SELECT 'Deluxe', 'Wi-Fi'
+    UNION ALL SELECT 'Deluxe', 'Air conditioning'
+    UNION ALL SELECT 'Deluxe', 'Mini fridge'
+    UNION ALL SELECT 'Deluxe', 'Bathtub'
+    UNION ALL SELECT 'Suite', 'Wi-Fi'
+    UNION ALL SELECT 'Suite', 'Living area'
+    UNION ALL SELECT 'Suite', 'Kitchenette'
+    UNION ALL SELECT 'Suite', 'Bathtub'
+    UNION ALL SELECT 'Family', 'Wi-Fi'
+    UNION ALL SELECT 'Family', 'Extra beds'
+    UNION ALL SELECT 'Family', 'Air conditioning'
+) seed
+JOIN room_classes rc ON rc.class_name = seed.class_name
+WHERE NOT EXISTS (
+    SELECT 1 FROM room_class_amenities a
+    WHERE a.room_class_id = rc.id AND a.amenity = seed.amenity
+);
 
 INSERT INTO hotel_services (service_name, category, unit_price, description, duration, availability)
 SELECT seed.service_name, seed.category, seed.unit_price, seed.description, seed.duration, seed.availability

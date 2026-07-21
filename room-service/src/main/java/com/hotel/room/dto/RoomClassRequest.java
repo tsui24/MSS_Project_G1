@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.AssertTrue;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class RoomClassRequest {
 
@@ -28,6 +29,8 @@ public class RoomClassRequest {
     @NotNull
     @DecimalMin(value = "0.0", inclusive = true)
     private BigDecimal extraPersonFee;
+
+    private List<String> amenities;
 
     public String getClassName() {
         return className;
@@ -72,5 +75,13 @@ public class RoomClassRequest {
 
     public void setExtraPersonFee(BigDecimal extraPersonFee) {
         this.extraPersonFee = extraPersonFee;
+    }
+
+    public List<String> getAmenities() {
+        return amenities;
+    }
+
+    public void setAmenities(List<String> amenities) {
+        this.amenities = amenities;
     }
 }

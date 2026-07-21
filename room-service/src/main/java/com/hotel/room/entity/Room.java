@@ -24,6 +24,9 @@ public class Room {
     @Column(name = "description", length = 1000)
     private String description;
 
+    @Column(name = "floor")
+    private Integer floor;
+
     public Long getId() {
         return id;
     }
@@ -62,5 +65,13 @@ public class Room {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getFloor() {
+        return floor;
+    }
+
+    public void setFloor(Integer floor) {
+        this.floor = floor;
     }
 }

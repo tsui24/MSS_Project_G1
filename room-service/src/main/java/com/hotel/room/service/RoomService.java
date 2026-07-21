@@ -53,6 +53,7 @@ public class RoomService {
         room.setRoomClass(roomClass);
         room.setStatus(request.getStatus() != null ? request.getStatus() : RoomStatus.AVAILABLE);
         room.setDescription(request.getDescription());
+        room.setFloor(request.getFloor());
         return new RoomResponse(roomRepository.save(room));
     }
 
@@ -65,6 +66,7 @@ public class RoomService {
             room.setStatus(request.getStatus());
         }
         room.setDescription(request.getDescription());
+        room.setFloor(request.getFloor());
         return new RoomResponse(roomRepository.save(room));
     }
 

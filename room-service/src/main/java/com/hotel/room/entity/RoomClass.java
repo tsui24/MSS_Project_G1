@@ -3,6 +3,8 @@ package com.hotel.room.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "room_classes")
@@ -27,6 +29,11 @@ public class RoomClass {
     @Column(name = "extra_person_fee", nullable = false, precision = 12, scale = 2,
             columnDefinition = "DECIMAL(12,2) NOT NULL DEFAULT 0.00")
     private BigDecimal extraPersonFee = BigDecimal.ZERO;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "room_class_amenities", joinColumns = @JoinColumn(name = "room_class_id"))
+    @Column(name = "amenity", nullable = false, length = 100)
+    private List<String> amenities = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -74,5 +81,13 @@ public class RoomClass {
 
     public void setExtraPersonFee(BigDecimal extraPersonFee) {
         this.extraPersonFee = extraPersonFee;
+    }
+
+    public List<String> getAmenities() {
+        return amenities;
+    }
+
+    public void setAmenities(List<String> amenities) {
+        this.amenities = amenities != null ? amenities : new ArrayList<>();
     }
 }

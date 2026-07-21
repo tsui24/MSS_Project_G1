@@ -3,6 +3,8 @@ package com.hotel.room.dto;
 import com.hotel.room.entity.RoomClass;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RoomClassResponse {
 
@@ -12,6 +14,7 @@ public class RoomClassResponse {
     private Integer standardOccupancy;
     private Integer maxOccupancy;
     private BigDecimal extraPersonFee;
+    private List<String> amenities;
 
     public RoomClassResponse(RoomClass roomClass) {
         this.id = roomClass.getId();
@@ -20,6 +23,9 @@ public class RoomClassResponse {
         this.standardOccupancy = roomClass.getStandardOccupancy();
         this.maxOccupancy = roomClass.getMaxOccupancy();
         this.extraPersonFee = roomClass.getExtraPersonFee();
+        this.amenities = roomClass.getAmenities() != null
+                ? new ArrayList<>(roomClass.getAmenities())
+                : List.of();
     }
 
     public Long getId() {
@@ -44,5 +50,9 @@ public class RoomClassResponse {
 
     public BigDecimal getExtraPersonFee() {
         return extraPersonFee;
+    }
+
+    public List<String> getAmenities() {
+        return amenities;
     }
 }
