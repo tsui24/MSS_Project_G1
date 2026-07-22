@@ -35,19 +35,28 @@ public class AuthService {
     }
 
     public LoginResponse register(RegisterRequest request) {
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new DuplicateResourceException("Username already taken: " + request.getUsername());
+        String loginUsername = request.resolveLoginUsername();
+        if (loginUsername == null) {
+            throw new IllegalArgumentException("Email or username is required");
+        }
+        if (userRepository.existsByUsername(loginUsername)) {
+            throw new DuplicateResourceException("Username already taken: " + loginUsername);
+        }
+        String identityCard = request.getIdentityCard() == null ? null : request.getIdentityCard().trim();
+        if (identityCard != null && !identityCard.isEmpty() && userRepository.existsByIdentityCard(identityCard)) {
+            throw new DuplicateResourceException("Identity card already registered: " + identityCard);
         }
         String roleName = request.getRoleName() != null ? request.getRoleName() : DEFAULT_ROLE;
         Role role = roleRepository.findByRoleName(roleName)
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found: " + roleName));
 
         User user = new User();
-        user.setUsername(request.getUsername());
+        user.setUsername(loginUsername);
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         user.setFullName(request.getFullName());
         user.setRole(role);
         user.setPhoneNumber(request.getPhoneNumber());
+        user.setIdentityCard(identityCard == null || identityCard.isEmpty() ? null : identityCard);
         user.setDepartment(request.getDepartment());
         user.setEmploymentStatus(request.getEmploymentStatus() != null ? request.getEmploymentStatus() : "AVAILABLE");
         user.setActive(request.getActive() == null || request.getActive());
